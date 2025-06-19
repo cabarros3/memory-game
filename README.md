@@ -1,10 +1,10 @@
-# 📋 Documento de Requisitos – Jogo da Memória "1908 – A Lenda das Ladeiras"
+# 📋 Documento de Requisitos – Jogo da Memória
 
 ## 1. Visão Geral do Projeto
 
 O projeto consiste em um jogo da memória temático, baseado no famoso ônibus 1908 da comunidade rural de Botafogo (Igarassu - PE), conhecido por sua velocidade nas ladeiras e curvas da BR-101. O objetivo é oferecer uma experiência lúdica e divertida, acessível por navegadores web.
 
-- **Nome provisório**: Memory Game
+- **Nome provisório**: Memory Game (nome provisóiro)
 - **Objetivo**: Desenvolver um jogo da memória simples, temático e responsivo
 - **Plataforma**: Web (desktop e mobile)
 - **Público-alvo**: Comunidade acadêmica do IPFE Igarassu
