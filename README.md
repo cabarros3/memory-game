@@ -98,3 +98,7 @@ O projeto consiste em um jogo da memória temático, baseado no famoso ônibus 1
 - 📈 Ranking com melhores tempos (futuro)
 - 🧑‍🤝‍🧑 Modo multiplayer local ou online (futuro)
 - 🎨 Customização de temas e fundos (futuro)
+
+## Para rodar o projeto
+
+- npm run dev
