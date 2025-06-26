@@ -1,1 +1,28 @@
 @import 'tailwindcss';
+
+.grade {
+	display: grid;
+	grid-template-columns: repeat(4, 60px);
+	gap: 10px;
+	justify-content: center;
+	margin-top: 20px;
+	/* Forçar largura mínima que soma as colunas e gaps */
+	width: max-content;
+}
+
+.cartas.virada {
+	background-color: #000;
+	color: #fff;
+}
+
+.carta {
+	width: 60px;
+	height: 60px;
+	background-color: #ddd;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 24px;
+	border: 1px solid #aaa;
+	cursor: pointer;
+}
