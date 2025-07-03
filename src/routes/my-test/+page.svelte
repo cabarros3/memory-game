@@ -1,192 +1,141 @@
-<!-- <script>
-	const totalCartas = 12;
-	let cartasAbertas = Array(totalCartas).fill(false);
-
-	function virarCarta(i) {
-		cartasAbertas[i] = !cartasAbertas[i];
-	}
-</script>
-
-<div class="flex min-h-screen flex-col items-center justify-center bg-gray-800">
-
-	<div class="flex w-full max-w-6xl justify-between bg-yellow-400 px-6 py-3 font-bold text-black">
-		<span>TEMPO</span>
-		<span>NÍVEL</span>
-		<span>PONTUAÇÃO</span>
-	</div>
-
-	
-	<div class="relative mt-4 rounded-lg bg-white pt-5 pr-10 pb-12 pl-10 shadow-lg">
-		
-		<div class="grid grid-cols-[auto_80px_auto_80px_auto_80px] items-start gap-x-4">
-			
-			<div class="grid grid-cols-2 grid-rows-2">
-				{#each Array(4) as _, i}
-					<div class="janela" on:click={toggle}>
-						<img src="/carta.png" alt="Imagem" class="imagem" />
-						<div class="vidro {aberto ? 'aberto' : ''}"></div>
-					</div>
-				{/each}
-			</div>
-
-			<div class="grid h-[200px] w-[80px] grid-rows-2 overflow-hidden rounded-sm shadow-inner">
-				
-				<div class="grid grid-cols-2 gap-[2px] bg-black/80 p-1">
-					<div class="h-20 rounded-sm bg-blue-100 shadow-inner"></div>
-					<div class="h-20 rounded-sm bg-blue-100 shadow-inner"></div>
-				</div>
-
-			
-				<div class="h-full bg-black/80"></div>
-			</div>
-
-			
-			<div class="grid grid-cols-2 grid-rows-2">
-				{#each Array(4) as _, i}
-					<div class="janela" on:click={toggle}>
-						<img src="/carta.png" alt="Imagem" class="imagem" />
-						<div class="vidro {aberto ? 'aberto' : ''}"></div>
-					</div>
-				{/each}
-			</div>
-
-			<div class="grid h-[200px] w-[80px] grid-rows-2 overflow-hidden rounded-sm shadow-inner">
-				
-				<div class="grid grid-cols-2 gap-[2px] bg-black/80 p-1">
-					<div class="h-20 rounded-sm bg-blue-100 shadow-inner"></div>
-					<div class="h-20 rounded-sm bg-blue-100 shadow-inner"></div>
-				</div>
-
-				
-				<div class="h-full bg-black/80"></div>
-			</div>
-
-
-			<div class="grid grid-cols-2 grid-rows-2">
-				{#each Array(4) as _, i}
-					<div class="janela" on:click={toggle}>
-						<img src="/carta.png" alt="Imagem" class="imagem" />
-						<div class="vidro {aberto ? 'aberto' : ''}"></div>
-					</div>
-				{/each}
-			</div>
-
-			<div class="grid h-[200px] w-[80px] grid-rows-2 overflow-hidden rounded-sm shadow-inner">
-			
-				<div class="grid grid-cols-2 gap-[2px] bg-black/80 p-1">
-					<div class="h-20 rounded-sm bg-blue-100 shadow-inner"></div>
-					<div class="h-20 rounded-sm bg-blue-100 shadow-inner"></div>
-				</div>
-
-				
-				<div class="h-full bg-black/80"></div>
-			</div>
-		</div>
-
-		<div class="absolute bottom-[-24px] left-28 h-16 w-16 rounded-full bg-black shadow-md"></div>
-		<div class="absolute right-28 bottom-[-24px] h-16 w-16 rounded-full bg-black shadow-md"></div>
-	</div>
-</div> -->
-
 <script lang="ts">
-	const totalCartas = 12;
-	let cartasAbertas: boolean[] = Array(totalCartas).fill(false);
+	// declara o tipo de dados aceitos dentro do array cartas (um número, uma string, e boolean para a situação virada)
+	// é preciso entender o conceito de objetos
+	type CartasType = {
+		id: number;
+		valor: string;
+		virada: boolean; //true se pra cima, false se pra baixo
+		encontrada: boolean; //indica se um par foi achado
+	};
 
-	function virarCarta(i: number): void {
-		cartasAbertas[i] = !cartasAbertas[i];
+	let cartas: CartasType[] = []; // salva o id e o valor das cartas
+	let letras = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']; // diz que as cartas terão esses valores
+	let valores: string[] = []; // Guarda os pares das cartas (letras duplicadas)
+
+	let primeiraVirada: CartasType | null = null;
+	let segundaVirada: CartasType | null = null;
+	let bloqueado = false; // impede clique enquanto comparamos
+
+	// For para guardar as letras as letras duplicadas
+	// a cada iteração guarda um par de letras
+	for (let i: number = 0; i < 8; i++) {
+		valores.push(letras[i]);
+		valores.push(letras[i]);
 	}
+
+	// Segunda troca pulando de 3 em 3
+	for (let i = 0; i < valores.length - 3; i += 3) {
+		const temp = valores[i];
+		valores[i] = valores[i + 3];
+		valores[i + 3] = temp;
+	}
+
+	// para carregar as cartas com os valores
+	for (let i = 0; i < valores.length; i++) {
+		cartas.push({
+			id: i,
+			valor: valores[i],
+			virada: false, // todas começam viradas para baixo por isso false
+			encontrada: false // todas começam sem seus pares, logo não há encontrada
+		});
+	}
+
+	// agora vamos precisar criar uma função para virar as cartas
+	// ela recebe a identificação (id) da carta, muda o "virada" de false para true
+	function virarCarta(id: number) {
+  if (bloqueado) return;
+
+  for (let i = 0; i < cartas.length; i++) {
+    if (cartas[i].id === id && !cartas[i].virada && !cartas[i].encontrada) {
+      cartas[i].virada = true;
+
+      if (!primeiraVirada) {
+        primeiraVirada = cartas[i];
+      } else if (!segundaVirada) {
+        segundaVirada = cartas[i];
+        bloqueado = true; // bloqueia cliques durante a comparação
+
+        if (primeiraVirada.valor === segundaVirada.valor) {
+          primeiraVirada.encontrada = true;
+          segundaVirada.encontrada = true;
+
+          // Verifica se todas as cartas foram encontradas
+          const todasEncontradas = cartas.every(carta => carta.encontrada);
+          if (todasEncontradas) {
+            setTimeout(() => {
+              resetarJogo();
+            }, 1000); // espera 1 segundo antes de resetar
+          }
+
+          // limpa tudo e desbloqueia
+          primeiraVirada = null;
+          segundaVirada = null;
+          bloqueado = false;
+        } else {
+          // espera 1 segundo antes de desvirar
+          setTimeout(() => {
+            if (primeiraVirada) primeiraVirada.virada = false;
+            if (segundaVirada) segundaVirada.virada = false;
+
+            primeiraVirada = null;
+            segundaVirada = null;
+            bloqueado = false;
+          }, 1000);
+        }
+      }
+
+      break;
+    }
+  }
+}
+
+
+  function resetarJogo() {
+  // Reseta cartas: vira tudo pra baixo e limpa encontrada
+  for (let i = 0; i < cartas.length; i++) {
+    cartas[i].virada = false;
+    cartas[i].encontrada = false;
+  }
+
+  // Reembaralha os valores no array valores
+  for (let i = 0; i < valores.length - 1; i += 2) {
+    const temp = valores[i];
+    valores[i] = valores[i + 1];
+    valores[i + 1] = temp;
+  }
+  for (let i = 0; i < valores.length - 3; i += 3) {
+    const temp = valores[i];
+    valores[i] = valores[i + 3];
+    valores[i + 3] = temp;
+  }
+
+  // Atualiza os valores das cartas com os valores embaralhados
+  for (let i = 0; i < cartas.length; i++) {
+    cartas[i].valor = valores[i];
+  }
+
+  primeiraVirada = null;
+  segundaVirada = null;
+  bloqueado = false;
+}
+
 </script>
 
-<div class="flex min-h-screen flex-col items-center justify-center bg-gray-800">
-	<!-- Topo -->
-	<div class="flex w-full max-w-6xl justify-between bg-yellow-400 px-6 py-3 font-bold text-black">
-		<span>TEMPO</span>
-		<span>NÍVEL</span>
-		<span>PONTUAÇÃO</span>
+<main class="mx-10 my-10 flex flex-row items-center gap-20">
+	<!-- <h1 class="text-3xl">Jogo da Memória</h1> -->
+	<div class="grade">
+		{#each cartas as carta}
+			<button
+				class="cartas {carta.virada ? 'virada' : ''}"
+				type="button"
+				on:click={() => virarCarta(carta.id)}
+			>
+				{#if carta.virada}
+					{carta.valor}
+				{:else}
+					❓
+				{/if}
+			</button>
+		{/each}
 	</div>
-
-	<!-- Corpo do ônibus -->
-	<div class="relative mt-4 rounded-lg bg-white pt-5 pr-10 pb-12 pl-10 shadow-lg">
-		<!-- Grid horizontal com grupos e portas -->
-		<div class="grid grid-cols-[auto_80px_auto_80px_auto_80px] items-start gap-x-4">
-			<!-- Grupo 1 -->
-			<div class="grid grid-cols-2 grid-rows-2">
-				{#each [0, 1, 2, 3] as carta, i}
-					<div
-						class="janela"
-						role="button"
-						tabindex="0"
-						on:click={() => virarCarta(i)}
-						on:keydown={(e) => e.key === 'Enter' && virarCarta(i)}
-					>
-						<img src="/carta.png" alt="Imagem" class="imagem" />
-						<div class="vidro {cartasAbertas[i] ? 'aberto' : ''}"></div>
-					</div>
-				{/each}
-			</div>
-
-			<!-- Porta 1 -->
-			<div class="grid h-[200px] w-[80px] grid-rows-2 overflow-hidden rounded-sm shadow-inner">
-				<div class="grid grid-cols-2 gap-[2px] bg-black/80 p-1">
-					<div class="h-20 rounded-sm bg-blue-100 shadow-inner"></div>
-					<div class="h-20 rounded-sm bg-blue-100 shadow-inner"></div>
-				</div>
-				<div class="h-full bg-black/80"></div>
-			</div>
-
-			<!-- Grupo 2 -->
-			<div class="grid grid-cols-2 grid-rows-2">
-				{#each [0, 1, 2, 3] as carta, i}
-					<div
-						class="janela"
-						role="button"
-						tabindex="0"
-						on:click={() => virarCarta(4 + i)}
-						on:keydown={(e) => e.key === 'Enter' && virarCarta(i)}
-					>
-						<img src="/carta.png" alt="Imagem" class="imagem" />
-						<div class="vidro {cartasAbertas[4 + i] ? 'aberto' : ''}"></div>
-					</div>
-				{/each}
-			</div>
-
-			<!-- Porta 2 -->
-			<div class="grid h-[200px] w-[80px] grid-rows-2 overflow-hidden rounded-sm shadow-inner">
-				<div class="grid grid-cols-2 gap-[2px] bg-black/80 p-1">
-					<div class="h-20 rounded-sm bg-blue-100 shadow-inner"></div>
-					<div class="h-20 rounded-sm bg-blue-100 shadow-inner"></div>
-				</div>
-				<div class="h-full bg-black/80"></div>
-			</div>
-
-			<!-- Grupo 3 -->
-			<div class="grid grid-cols-2 grid-rows-2">
-				{#each [0, 1, 2, 3] as carta, i}
-					<div
-						class="janela"
-						role="button"
-						tabindex="0"
-						on:click={() => virarCarta(8 + i)}
-						on:keydown={(e) => e.key === 'Enter' && virarCarta(i)}
-					>
-						<img src="/carta.png" alt="Imagem" class="imagem" />
-						<div class="vidro {cartasAbertas[8 + i] ? 'aberto' : ''}"></div>
-					</div>
-				{/each}
-			</div>
-
-			<!-- Porta 3 -->
-			<div class="grid h-[200px] w-[80px] grid-rows-2 overflow-hidden rounded-sm shadow-inner">
-				<div class="grid grid-cols-2 gap-[2px] bg-black/80 p-1">
-					<div class="h-20 rounded-sm bg-blue-100 shadow-inner"></div>
-					<div class="h-20 rounded-sm bg-blue-100 shadow-inner"></div>
-				</div>
-				<div class="h-full bg-black/80"></div>
-			</div>
-		</div>
-
-		<!-- Rodas do ônibus -->
-		<div class="absolute bottom-[-24px] left-28 h-16 w-16 rounded-full bg-black shadow-md"></div>
-		<div class="absolute right-28 bottom-[-24px] h-16 w-16 rounded-full bg-black shadow-md"></div>
-	</div>
-</div>
+</main>
