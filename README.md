@@ -1,104 +1,124 @@
-# 📋 Documento de Requisitos – Jogo da Memória
+# 🚌 MemoryGame: Botafogo
 
-## 1. Visão Geral do Projeto
+## 📌 1. Visão Geral
 
-O projeto consiste em um jogo da memória temático, baseado no famoso ônibus 1908 da comunidade rural de Botafogo (Igarassu - PE), conhecido por sua velocidade nas ladeiras e curvas da BR-101. O objetivo é oferecer uma experiência lúdica e divertida, acessível por navegadores web.
+Este projeto é um **jogo da memória temático** inspirado no famoso ônibus 1908 da comunidade rural de Botafogo (Igarassu - PE). A proposta é oferecer uma experiência divertida e acessível via navegador, com visual adaptado ao contexto local.
 
-- **Nome provisório**: Memory Game (nome provisóiro)
-- **Objetivo**: Desenvolver um jogo da memória simples, temático e responsivo
+- **Nome provisório**: MemoGame: Botafogo
+- **Objetivo**: Criar um jogo da memória simples, temático e responsivo
 - **Plataforma**: Web (desktop e mobile)
 - **Público-alvo**: Comunidade acadêmica do IPFE Igarassu
 
 ---
 
-## 2. Requisitos Funcionais
+## ✅ 2. Requisitos Funcionais
 
-| Código | Requisito                                                  |
+| Código | Descrição                                                  |
 | ------ | ---------------------------------------------------------- |
 | RF01   | Exibir tela inicial com botão "Jogar"                      |
 | RF02   | Mostrar tabuleiro com cartas viradas para baixo            |
 | RF03   | Permitir virar duas cartas por jogada                      |
-| RF04   | Manter cartas iguais viradas, esconder se forem diferentes |
+| RF04   | Manter cartas iguais viradas; esconder se forem diferentes |
 | RF05   | Contar tempo da partida e número de tentativas             |
-| RF06   | Informar o jogador quando todos os pares forem encontrados |
+| RF06   | Informar quando todos os pares forem encontrados           |
 | RF07   | Oferecer botão para reiniciar o jogo                       |
-| RF08   | Permitir troca de tema (modo claro/escuro)                 |
+| RF08   | Permitir troca de tema (claro/escuro)                      |
 | RF09   | Exibir placar final com tempo e tentativas                 |
 
 ---
 
-## 3. Requisitos Não Funcionais
+## 🚫 3. Requisitos Não Funcionais
 
-| Código | Requisito                                                 |
-| ------ | --------------------------------------------------------- |
-| RNF01  | O jogo deve carregar em até 3 segundos                    |
-| RNF02  | Interface responsiva para mobile e desktop                |
-| RNF03  | Aplicação deve ser desenvolvida com Svelte e Tailwind CSS |
-| RNF04  | Aplicação deve ser acessível (ex: teclas, ARIA)           |
-| RNF05  | Deve funcionar nos principais navegadores modernos        |
+| Código | Descrição                                         |
+| ------ | ------------------------------------------------- |
+| RNF01  | O jogo deve carregar em até 3 segundos            |
+| RNF02  | Interface responsiva para mobile e desktop        |
+| RNF03  | Desenvolvido com Svelte e Tailwind CSS            |
+| RNF04  | Deve ser acessível (navegação por teclado, ARIA)  |
+| RNF05  | Compatível com os principais navegadores modernos |
 
 ---
 
-## 4. Tecnologias Utilizadas
+## 🧰 4. Tecnologias Utilizadas
 
-- **Framework**: SvelteKit
+- **Framework**: [SvelteKit](https://kit.svelte.dev)
 - **Estilização**: Tailwind CSS
-- **Fonte**: Lexend ou Inter (Google Fonts)
 - **Controle de versão**: Git + GitHub
-- **Hospedagem**: Netlify ou Vercel (a definir)
-- **Ferramentas auxiliares**: Vite, ESLint, Prettier (opcional)
+- **Hospedagem**: Netlify ou Vercel _(a definir)_
+- **Ferramentas auxiliares**: Vite, ESLint, Prettier
 
 ---
 
-## 5. Interface e Navegação
+## 🧭 5. Interface e Navegação
 
-### Estrutura das Páginas
+### Tela Inicial
 
-- **Tela Inicial**
-  - Nome do jogo
-  - Botão "Jogar"
-- **Tela do Jogo**
-  - Grade 4x4 com cartas
-  - Timer
-  - Contador de tentativas
-  - Botão "Reiniciar"
-- **Tela Final**
-  - Mensagem de parabéns
-  - Exibição do tempo e tentativas
-  - Botão “Jogar novamente”
+- Nome do jogo
+- Botão "Jogar"
+
+### Tela do Jogo
+
+- Grade 4x4 com cartas
+- Temporizador
+- Contador de tentativas
+- Botão "Reiniciar"
+
+### Tela Final
+
+- Mensagem de conclusão
+- Tempo total e número de tentativas
+- Botão “Jogar novamente”
 
 ---
 
-## 5. Regras do Jogo
+## 🎮 6. Regras do Jogo
 
-- O tabuleiro será composto por 8 pares de cartas (total de 16)
-- As cartas serão embaralhadas no início da partida
-- O jogador pode virar apenas 2 cartas por jogada
-- Cartas iguais permanecem viradas
+- 16 cartas (8 pares) embaralhadas aleatoriamente
+- Jogador vira 2 cartas por vez
+- Cartas iguais permanecem visíveis
 - Cartas diferentes viram de volta após 1 segundo
-- O jogo termina quando todos os pares forem encontrados
-- O tempo e número de tentativas são exibidos ao final
+- Jogo termina ao encontrar todos os pares
+- Exibição do tempo e tentativas no final
 
 ---
 
-## 6. Critérios de Aceitação
+## 🎯 7. Critérios de Aceitação
 
-- ✅ Todas as funcionalidades descritas estão implementadas
-- ✅ Design responsivo em diferentes resoluções de tela
-- ✅ Acessibilidade implementada (teclado e leitores de tela)
-- ✅ Compatibilidade com navegadores modernos (Chrome, Firefox, Edge)
-- ✅ Código limpo, modular e reutilizável com Svelte
+- [x] Todas as funcionalidades estão implementadas
+- [x] Design responsivo para diferentes tamanhos de tela
+- [x] Acessibilidade por teclado e leitores de tela
+- [x] Compatibilidade com Chrome, Firefox e Edge
+- [x] Código limpo, modular e reutilizável em Svelte
 
 ---
 
-## 7. Extras e Futuras Implementações
+## 💡 8. Funcionalidades Futuras
 
-- 🎵 Efeitos sonoros ao virar carta ou vencer
-- 🎉 Animações personalizadas para vitórias
-- 📈 Ranking com melhores tempos (futuro)
-- 🧑‍🤝‍🧑 Modo multiplayer local ou online (futuro)
-- 🎨 Customização de temas e fundos (futuro)
+- 🔊 Efeitos sonoros (cartas e vitória)
+- ✨ Animações personalizadas
+- 🏆 Ranking com melhores tempos
+- 👫 Modo multiplayer local ou online
+- 🎨 Customização de temas e fundos
 
-## Para rodar o projeto
+---
 
-- npm run dev
+## 🛠️ 9. Como Rodar o Projeto Localmente
+
+### ⚙️ Pré-requisitos
+
+- [Node.js](https://nodejs.org/) (versão LTS recomendada)
+- [Git](https://git-scm.com/)
+
+### 📦 Passos
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/seu-usuario/seu-repositorio.git
+cd seu-repositorio
+
+# 2. Instale as dependências
+npm install
+
+# 3. Rode o servidor de desenvolvimento
+npm run dev
+```

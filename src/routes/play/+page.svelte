@@ -49,7 +49,7 @@
 			<div class="flex w-full {window.innerWidth <= 768 ? 'max-w-4xl gap-12 px-4 py-4' : 'max-w-6xl gap-20 px-6 py-6'} justify-center font-bold text-black">
 				<Botao text="00:00" size="sm" />
 				<Botao text="Lvl 1" size="sm" />
-				<Botao text="0" size="sm" />
+				<Botao text="tentativas: 0" size="sm" />
 			</div>
 
 			<!-- Ônibus: ajustado baseado no tamanho da tela -->
