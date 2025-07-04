@@ -22,16 +22,6 @@
 	z-index: -1;
 }
 
-.logo {
-	position: absolute;
-	opacity: 0.15; /* bem suave como marca d'água */
-	transition: transform 0.3s ease;
-}
-
-.logo:hover {
-	transform: scale(1.1);
-}
-
 .grade {
 	display: grid;
 	grid-template-columns: repeat(4, 60px);
@@ -59,27 +49,26 @@
 	cursor: pointer;
 }
 
-@keyframes spin {
-	from {
-		transform: rotate(0deg);
-	}
-	to {
-		transform: rotate(360deg);
-	}
-}
-
-.spin-once {
-	animation: spin 1s ease-in-out;
-}
-
+/* Estilos base para janelas - CORRIGIDO */
 .janela {
 	position: relative;
-	width: 64px; /* w-16 */
-	height: 72px; /* h-20 */
+	width: 4rem; /* 64px - mais consistente */
+	height: 4.5rem; /* 72px - mais consistente */
 	border: 2px solid black;
-	/* border-radius: 0.25rem; */
 	cursor: pointer;
 	overflow: hidden;
+	/* Garantir touch targets adequados */
+	min-width: 44px;
+	min-height: 44px;
+	/* Melhorar clique em mobile */
+	touch-action: manipulation;
+}
+
+.imagem {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
 }
 
 .vidro {
@@ -88,15 +77,368 @@
 	background: var(--color-blue-100);
 	transition: transform 0.5s ease;
 	z-index: 2;
+	/* Garante que não saia da janela */
+	overflow: hidden;
+	/* Melhor performance em mobile */
+	will-change: transform;
 }
 
 .vidro.aberto {
 	transform: translateX(-100%);
 }
 
-.imagem {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	display: block;
+/* Layout responsivo com CSS Grid e Media Queries - MELHORADO */
+.barra-topo {
+	max-width: 72rem; /* 6xl */
+	gap: 5rem;
+	padding: 1.5rem;
+	/* Melhor centralização */
+	margin: 0 auto;
+}
+
+.onibus-container {
+	margin-top: 10rem;
+	max-width: 72rem; /* 6xl */
+	padding: 1.25rem 1.5rem 3rem 1.5rem;
+	/* Melhor centralização */
+	margin-left: auto;
+	margin-right: auto;
+	/* Prevenir overflow horizontal */
+	overflow-x: auto;
+	/* Scroll suave se necessário */
+	scroll-behavior: smooth;
+}
+
+.onibus-grid {
+	display: grid;
+	grid-template-columns: auto 80px auto 80px auto 80px;
+	gap: 1rem;
+	/* Garantir que o grid não quebre */
+	min-width: min-content;
+}
+
+.grupo-janelas {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+}
+
+.porta {
+	height: 200px;
+	width: 80px;
+	display: flex;
+	flex-direction: column;
+}
+
+.porta-superior {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.porta-vidro {
+	height: 5rem;
+}
+
+.roda-esquerda {
+	position: absolute;
+	bottom: -24px;
+	left: 7rem;
+	height: 4rem;
+	width: 4rem;
+	border-radius: 50%;
+	background-color: #333;
+}
+
+.roda-direita {
+	position: absolute;
+	bottom: -24px;
+	right: 7rem;
+	height: 4rem;
+	width: 4rem;
+	border-radius: 50%;
+	background-color: #333;
+}
+
+/* BREAKPOINTS MELHORADOS */
+
+/* Tablets grandes e laptops pequenos */
+@media (max-width: 1200px) {
+	.barra-topo {
+		max-width: 64rem; /* 4xl */
+		gap: 4rem;
+		padding: 1.25rem;
+	}
+
+	.onibus-container {
+		margin-top: 8rem;
+		max-width: 64rem;
+		padding: 1rem 1.25rem 2.5rem 1.25rem;
+	}
+
+	.onibus-grid {
+		grid-template-columns: auto 70px auto 70px auto 70px;
+		gap: 0.875rem;
+	}
+
+	.porta {
+		height: 175px;
+		width: 70px;
+	}
+
+	.porta-vidro {
+		height: 4.5rem;
+	}
+
+	.roda-esquerda {
+		left: 6rem;
+		height: 3.5rem;
+		width: 3.5rem;
+	}
+
+	.roda-direita {
+		right: 6rem;
+		height: 3.5rem;
+		width: 3.5rem;
+	}
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+	.barra-topo {
+		max-width: 56rem; /* 3xl */
+		gap: 3rem;
+		padding: 1rem;
+	}
+
+	.onibus-container {
+		margin-top: 6rem;
+		max-width: 56rem;
+		padding: 0.875rem 1rem 2rem 1rem;
+	}
+
+	.onibus-grid {
+		grid-template-columns: auto 60px auto 60px auto 60px;
+		gap: 0.75rem;
+	}
+
+	.grupo-janelas {
+		gap: 0.25rem;
+	}
+
+	.janela {
+		width: 3.5rem; /* 56px */
+		height: 4rem; /* 64px */
+	}
+
+	.porta {
+		height: 150px;
+		width: 60px;
+	}
+
+	.porta-superior {
+		gap: 1px;
+	}
+
+	.porta-vidro {
+		height: 3.5rem;
+	}
+
+	.roda-esquerda {
+		bottom: -18px;
+		left: 5rem;
+		height: 3rem;
+		width: 3rem;
+	}
+
+	.roda-direita {
+		bottom: -18px;
+		right: 5rem;
+		height: 3rem;
+		width: 3rem;
+	}
+}
+
+/* Tablets pequenos e phones grandes */
+@media (max-width: 768px) {
+	.janela {
+		width: 3rem; /* 48px */
+		height: 3.375rem; /* 54px */
+	}
+
+	.porta {
+		height: 120px;
+		width: 48px;
+	}
+
+	.porta-vidro {
+		height: 2.5rem;
+	}
+
+	.onibus-grid {
+		grid-template-columns: auto 48px auto 48px auto 48px;
+		gap: 0.5rem;
+	}
+
+	.barra-topo {
+		gap: 2.5rem;
+		padding: 0.875rem 0.75rem;
+	}
+
+	.onibus-container {
+		margin-top: 4rem;
+		padding: 0.75rem 0.875rem 1.75rem 0.875rem;
+	}
+
+	.roda-esquerda {
+		left: 3rem;
+		height: 2.5rem;
+		width: 2.5rem;
+	}
+
+	.roda-direita {
+		right: 3rem;
+		height: 2.5rem;
+		width: 2.5rem;
+	}
+
+	/* Alternativa de animação para mobile */
+	.vidro.aberto {
+		transform: scaleX(0);
+		transform-origin: right;
+	}
+}
+
+/* Phones pequenos */
+@media (max-width: 480px) {
+	.janela {
+		width: 2.5rem; /* 40px */
+		height: 2.875rem; /* 46px */
+	}
+
+	.porta {
+		height: 90px;
+		width: 36px;
+	}
+
+	.porta-vidro {
+		height: 2rem;
+	}
+
+	.onibus-grid {
+		grid-template-columns: auto 36px auto 36px auto 36px;
+		gap: 0.25rem;
+	}
+
+	.barra-topo {
+		gap: 2rem;
+		padding: 0.75rem 0.5rem;
+	}
+
+	.onibus-container {
+		margin-top: 3rem;
+		padding: 0.5rem 0.75rem 1.5rem 0.75rem;
+	}
+
+	.roda-esquerda {
+		left: 2rem;
+		height: 2rem;
+		width: 2rem;
+	}
+
+	.roda-direita {
+		right: 2rem;
+		height: 2rem;
+		width: 2rem;
+	}
+}
+
+/* Phones muito pequenos */
+@media (max-width: 320px) {
+	.janela {
+		width: 2.25rem; /* 36px */
+		height: 2.5rem; /* 40px */
+	}
+
+	.porta {
+		height: 75px;
+		width: 30px;
+	}
+
+	.porta-vidro {
+		height: 1.75rem;
+	}
+
+	.onibus-grid {
+		grid-template-columns: auto 30px auto 30px auto 30px;
+		gap: 0.125rem;
+	}
+
+	.barra-topo {
+		gap: 1.5rem;
+		padding: 0.5rem 0.25rem;
+	}
+
+	.onibus-container {
+		margin-top: 2rem;
+		padding: 0.25rem 0.5rem 1rem 0.5rem;
+	}
+
+	.roda-esquerda {
+		left: 1.5rem;
+		height: 1.5rem;
+		width: 1.5rem;
+	}
+
+	.roda-direita {
+		right: 1.5rem;
+		height: 1.5rem;
+		width: 1.5rem;
+	}
+}
+
+/* MELHORIAS ADICIONAIS PARA MOBILE */
+
+/* Prevenção de zoom em inputs em iOS */
+@media screen and (max-width: 768px) {
+	input[type='text'],
+	input[type='email'],
+	input[type='number'],
+	textarea {
+		font-size: 16px;
+	}
+}
+
+/* Melhor performance para animações */
+.janela,
+.vidro {
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	-webkit-perspective: 1000;
+	perspective: 1000;
+}
+
+/* Scroll suave para o container principal */
+.onibus-container {
+	-webkit-overflow-scrolling: touch;
+}
+
+/* Hover states apenas para dispositivos que suportam hover */
+@media (hover: hover) {
+	.janela:hover {
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+}
+
+/* Estados de foco para acessibilidade */
+.janela:focus {
+	outline-offset: 2px;
+}
+
+/* Melhor contraste para texto em telas pequenas */
+@media (max-width: 480px) {
+	.carta {
+		font-size: 20px;
+		font-weight: 600;
+	}
 }
