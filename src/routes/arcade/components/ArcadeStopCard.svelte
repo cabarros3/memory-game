@@ -16,7 +16,8 @@
   tabindex="0"
   on:click={() => !disabled && onSelect()}
   on:keydown={(e) => !disabled && (e.key === 'Enter' || e.key === ' ') && onSelect()}
-  class:grayscale={disabled} class="w-36 h-36 bg-white rounded-2xl shadow-md flex flex-col items-center justify-between disabled:cursor-not-allowed">
+  class:grayscale={disabled} 
+  class="w-36 h-36 bg-white rounded-2xl shadow-md flex flex-col items-center justify-between disabled:cursor-not-allowed">
   <!-- Container da imagem -->
   <div class="relative w-full h-20">
     <img
@@ -28,9 +29,9 @@
     <!-- Botão de Play centralizado -->
     <button
       on:click|stopPropagation={() => !disabled && onPlay()}
-      class="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-color3/60 rounded-t-2xl"
+      class="absolute inset-0 flex items-center justify-center bg-black/20 rounded-t-2xl"
     >
-      <Play fill="currentColor" class="w-10 h-10 text-white shadow-2xl" />
+      <Play fill="currentColor" class="w-10 h-10 text-white shadow-2xl hover:text-color3 hover:cursor-pointer" />
     </button>
   </div>
 

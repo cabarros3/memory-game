@@ -2,7 +2,7 @@
 	import ArcadeStopCard from './ArcadeStopCard.svelte';
   import { goto } from '$app/navigation';
   
-  let progress = 1;
+  let progress = 2;
 
   const cards = [
     {
