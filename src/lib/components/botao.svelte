@@ -1,35 +1,24 @@
 <script lang="ts">
   export let text: string = "Jogar";
   export let size: "sm" | "md" | "lg" = "md";
-  export let onClick = () => {};
+  export let onClick: () => void = () => {};
+  export let className: string = ""; 
+  export let style: string = "";     
 
   const sizeClasses = {
-    sm: {
-      width: "80px",
-      height: "auto",
-      fontSize: "1rem"
-    },
-    md: {
-      width: "90px",
-      height: "auto",
-      fontSize: "1.3rem"
-    },
-    lg: {
-      width: "100px",
-      height: "auto",
-      fontSize: "1.6rem"
-    }
+    sm: "w-20 text-base",
+    md: "w-24 text-lg",
+    lg: "w-40 text-xl"
   };
 
-  const current = sizeClasses[size];
+  const baseClasses = "py-1 font-bold rounded-2xl shadow-md transition-all duration-200";
 </script>
 
-<div>
-    <button class=" py-1 text-lg font-bold bg-color3 text-black rounded-lg hover:bg-color2 shadow-md" type="button" on:click={onClick} style="
-    width: {current.width};
-    height: {current.height};
-    font-size: {current.fontSize};
-  ">
-            {text}
-    </button>   
-</div>
+<button
+  class="{baseClasses} {sizeClasses[size]} {className}"
+  style={style}
+  type="button"
+  on:click={onClick}
+>
+  {text}
+</button>
