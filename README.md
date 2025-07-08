@@ -113,8 +113,8 @@ Este projeto é um **jogo da memória temático** inspirado no famoso ônibus 19
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
+git clone https://github.com/cabarros3/memory-game.git
+cd memory-game
 
 # 2. Instale as dependências
 npm install
