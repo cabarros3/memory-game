@@ -1,8 +1,15 @@
 <script lang="ts">
   // import Botao from './botao.svelte';
 
-  import { page } from '$app/stores';
+  import { page } from '$app/stores'; // verificar esse depracated
   import { get } from 'svelte/store';
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
+
+  function handleAjudaClick() {
+  dispatch("reabrirModal");
+}
 
   // capturar caminho atual da URL
   const pathname = get(page).url.pathname;
@@ -10,6 +17,7 @@
   export let tempo: string = "00:00";
   export let nivel: number = 1;
   export let tentativas: number = 0;
+  export const instructions = "Need help?"
 
 </script>
 
@@ -25,5 +33,6 @@
     <span>Level {nivel}</span>
   </div>
   {/if}
+  <button class="bg-color1 px-5 text-sm flex justify-center items-center rounded-2xl hover:cursor-pointer" on:click={handleAjudaClick}>{instructions}</button>
   
 </div>
