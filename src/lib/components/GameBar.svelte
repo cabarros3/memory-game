@@ -1,27 +1,20 @@
 <script lang="ts">
-  // import Botao from './botao.svelte';
-
-  import { page } from '$app/stores'; // verificar esse depracated
-  import { get } from 'svelte/store';
   import { createEventDispatcher } from "svelte";
-	import { DoorOpen, Pause, Settings } from 'lucide-svelte';
-  
+  import { page } from '$app/stores';
+  import { get } from 'svelte/store';
+  import { DoorOpen, Pause, Play, Settings } from 'lucide-svelte';
 
   const dispatch = createEventDispatcher();
 
-  function handleAjudaClick() {
-  dispatch("reabrirModal");
-}
-
-  // capturar caminho atual da URL
   const pathname = get(page).url.pathname;
-  
+
   export let tempo: string = "00:00";
   export let nivel: number = 1;
   export let tentativas: number = 0;
-  export const instructions = "Need help?"
+  export let instructions: string = "Need help?"
+  export let jogoPausado: boolean = false;
 
-   function handlePause() {
+  function handlePause() {
     dispatch('pause');
   }
 
@@ -29,20 +22,31 @@
     dispatch('exit');
   }
 
+  function handleAjudaClick() {
+    dispatch("reabrirModal");
+  }
 </script>
 
+
 <div class="flex w-full gap-5 sm:gap-8 md:gap-20 px-4 py-4 justify-center font-bold text-black">
-  <!-- Botão Pause -->
+
+
+<!-- Botão Pause ou Play -->
   <button
     class="bg-white text-color4 px-4 py-2 rounded-2xl cursor-pointer shadow-lg"
     on:click={handlePause}
-    aria-label="Pause game"
+    aria-label={jogoPausado ? "Resume game" : "Pause game"}
   >
-    <Pause fill="currentColor" />
+    {#if jogoPausado}
+      <Play fill="currentColor" class="w-10 h-10 text-color4" />
+    {:else}
+      <Pause fill="currentColor" class="w-10 h-10 text-color4" />
+    {/if}
   </button>
-  <div class="flex bg-color2 text-black px-5 py-2 shadow-lg text-sm justify-center items-center rounded-2xl">
-    <span>{tempo}</span>
-  </div>
+
+ <div class="flex bg-color2 text-black px-5 py-2 shadow-lg text-sm justify-center items-center rounded-2xl w-[4.5rem]">
+  <span class="font-mono">{tempo}</span>
+</div>
   <div class="bg-color1 px-5 text-sm shadow-lg flex justify-center items-center rounded-2xl">
     <span>{tentativas}</span>
   </div>

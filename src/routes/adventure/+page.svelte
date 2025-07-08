@@ -1,57 +1,33 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  // 📦 IMPORTAÇÕES
+  import { onMount, onDestroy } from 'svelte';
+  import { page } from '$app/stores';
+  import { get } from 'svelte/store';
+  import { goto } from '$app/navigation';
   import GameBus from './components/GameBus.svelte';
   import MobileWarning from './components/MobileWarning.svelte';
   import GameBar from '../../lib/components/GameBar.svelte';
   import Modal from "$lib/components/Modal.svelte";
-  import { goto } from '$app/navigation';
-  import { page } from '$app/stores';
-  import { get } from 'svelte/store';
+  import { criarTemporizador } from '$lib/utils/timer';
 
+  // 📍 ROTA ATUAL
   const pathname = get(page).url.pathname;
 
-  function handlePause() {
-    console.log('Jogo pausado - implemente a lógica aqui');
-    // Pode parar timers, mostrar modal de pausa, etc
-  }
-
-  // Redireciona ao clicar no botão "Exit"
-  function handleExit() {
-    const pathname = get(page).url.pathname;
-
-    if (pathname.includes('/adventure')) {
-      goto('/');
-    } else if (pathname.includes('/arcade')) {
-      goto('/levels');
-    }
-  }
-
-  // ✅ CONTROLA O ESTADO DO MODAL E A ORIGEM DA ABERTURA
-  let showIntroModal = true;
-  let isFromHelpButton = false; // ← usado para decidir o comportamento do conteúdo
-
-  function closeModal() {
-    showIntroModal = false;
-    isFromHelpButton = false; // ← reset ao fechar
-  }
-
-  // ✅ ESTA FUNÇÃO É CHAMADA QUANDO CLICA NO BOTÃO "Need help?" DO GameBar
-  function openFromHelpButton() {
-    showIntroModal = true;
-    isFromHelpButton = true; // ← sinaliza que veio do botão
-  }
-
-  // Dados do jogo
+  // 🎮 ESTADO DO JOGO
+  let jogoPausado = false;
   let tempo = "00:00";
+  let totalSegundos = 0;
   let nivel = 1;
   let tentativas = 0;
   let cartas = Array.from({ length: 12 }, (_, i) => ({ id: i, aberta: false }));
 
-  function virarCarta(i: number) {
-    cartas[i].aberta = !cartas[i].aberta;
-  }
+  // ⏱️ TEMPORIZADOR
+  const temporizador = criarTemporizador((tempoFormatado, s) => {
+    tempo = tempoFormatado;
+    totalSegundos = s;
+  });
 
-  // Controle de orientação (modo paisagem)
+  // 📲 ORIENTAÇÃO DA TELA
   let isLandscapeMobile = false;
 
   function isMobileDevice() {
@@ -63,11 +39,59 @@
     isLandscapeMobile = !isMobileDevice() || isLandscape;
   }
 
+  // 🧠 MODAL DE INSTRUÇÕES
+  let showIntroModal = true;
+  let isFromHelpButton = false;
+
+  function openFromHelpButton() {
+    showIntroModal = true;
+    isFromHelpButton = true;
+  }
+
+  function closeModal() {
+    showIntroModal = false;
+    isFromHelpButton = false;
+  }
+
+  // 🃏 AÇÕES DO JOGO
+  function virarCarta(i: number) {
+    cartas[i].aberta = !cartas[i].aberta;
+  }
+
+  function handlePause() {
+    if (jogoPausado) {
+      temporizador.iniciar();
+      console.log('Jogo retomado');
+    } else {
+      temporizador.pausar();
+      console.log('Jogo pausado');
+    }
+    jogoPausado = !jogoPausado;
+  }
+
+  function handleExit() {
+    temporizador.pausar();
+
+    if (pathname.includes('/adventure')) {
+      goto('/');
+    } else if (pathname.includes('/arcade')) {
+      goto('/levels');
+    }
+  }
+
+  // ▶️ CICLO DE VIDA
   onMount(() => {
+    temporizador.iniciar();
     checkOrientation();
     window.addEventListener('resize', checkOrientation);
   });
+
+  onDestroy(() => {
+    temporizador.pausar();
+    window.removeEventListener('resize', checkOrientation);
+  });
 </script>
+
 
 <!-- ✅ MODAL COM COMPORTAMENTO CONDICIONAL -->
 <Modal
@@ -108,6 +132,7 @@
       {tempo}
       {nivel}
       {tentativas}
+      {jogoPausado}
       on:reabrirModal={openFromHelpButton}
       on:pause={handlePause}
       on:exit={handleExit}
