@@ -4,6 +4,27 @@
   import MobileWarning from './components/MobileWarning.svelte';
   import GameBar from '../../lib/components/GameBar.svelte';
   import Modal from "$lib/components/Modal.svelte";
+  import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
+  import { get } from 'svelte/store';
+
+  const pathname = get(page).url.pathname;
+
+  function handlePause() {
+    console.log('Jogo pausado - implemente a lógica aqui');
+    // Pode parar timers, mostrar modal de pausa, etc
+  }
+
+  // Redireciona ao clicar no botão "Exit"
+  function handleExit() {
+    const pathname = get(page).url.pathname;
+
+    if (pathname.includes('/adventure')) {
+      goto('/');
+    } else if (pathname.includes('/arcade')) {
+      goto('/levels');
+    }
+  }
 
   // ✅ CONTROLA O ESTADO DO MODAL E A ORIGEM DA ABERTURA
   let showIntroModal = true;
@@ -88,6 +109,8 @@
       {nivel}
       {tentativas}
       on:reabrirModal={openFromHelpButton}
+      on:pause={handlePause}
+      on:exit={handleExit}
     />
     <GameBus {cartas} {virarCarta} />
   </div>
