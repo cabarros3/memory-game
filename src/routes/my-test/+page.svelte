@@ -8,6 +8,12 @@
 		encontrada: boolean; //indica se um par foi achado
 	};
 
+
+  
+
+
+
+
 	let cartas: CartasType[] = []; // salva o id e o valor das cartas
 	let letras = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']; // diz que as cartas terão esses valores
 	let valores: string[] = []; // Guarda os pares das cartas (letras duplicadas)
