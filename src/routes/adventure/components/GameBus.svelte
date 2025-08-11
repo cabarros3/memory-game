@@ -69,7 +69,7 @@
   <div class="absolute bottom-[-24px] right-28 h-16 w-16 rounded-full bg-black shadow-md"></div>
 </div> -->
 
-
+<!-- 
 <script lang="ts">
   import WindowGroup from './WindowGroup.svelte';
   import Door from './Door.svelte';
@@ -95,10 +95,10 @@
 
   // Cria array de cartas visuais reativo
   $: cartas = cartasClasse.map(mapCarta);
-</script>
+</script> -->
 
 <!-- Debug Info -->
-<div class="relative mt-38 max-w-6xl rounded-lg bg-white px-6 py-6 shadow-lg">
+<!-- <div class="relative mt-38 max-w-6xl rounded-lg bg-white px-6 py-6 shadow-lg">
   <div class="grid grid-cols-[auto_80px_auto_80px_auto_80px] gap-x-4 items-start">
     {#if cartas && cartas.length >= 12}
       <WindowGroup baseIndex={0} cartas={cartas} {virarCarta} />
@@ -115,6 +115,43 @@
     {/if}
   </div>
 
+  <div class="absolute bottom-[-24px] left-28 h-16 w-16 rounded-full bg-black shadow-md"></div>
+  <div class="absolute bottom-[-24px] right-28 h-16 w-16 rounded-full bg-black shadow-md"></div>
+</div> -->
+
+
+<script lang="ts">
+  import WindowGroup from './WindowGroup.svelte';
+  import Door from './Door.svelte';
+  import type { Cartas } from '$lib/classes/Cartas';
+
+  // Props: cartas no formato da classe original e função para virar carta
+  export let cartasClasse: Cartas[] = [];
+  export let virarCarta: (index: number) => void;
+
+  // Usar diretamente as cartas da classe, sem conversão
+  $: cartas = cartasClasse;
+</script>
+
+<!-- Container do ônibus -->
+<div class="relative mt-38 max-w-6xl rounded-lg bg-white px-6 py-6 shadow-lg">
+  <div class="grid grid-cols-[auto_80px_auto_80px_auto_80px] gap-x-4 items-start">
+    {#if cartas && cartas.length >= 12}
+      <WindowGroup baseIndex={0} {cartas} {virarCarta} />
+      <Door />
+      <WindowGroup baseIndex={4} {cartas} {virarCarta} />
+      <Door />
+      <WindowGroup baseIndex={8} {cartas} {virarCarta} />
+      <Door />
+    {:else}
+      <div class="col-span-6 p-4 text-center">
+        <p>Carregando jogo...</p>
+        <p class="text-sm text-gray-500">Cartas: {cartas?.length || 0}/12</p>
+      </div>
+    {/if}
+  </div>
+
+  <!-- Rodas do ônibus -->
   <div class="absolute bottom-[-24px] left-28 h-16 w-16 rounded-full bg-black shadow-md"></div>
   <div class="absolute bottom-[-24px] right-28 h-16 w-16 rounded-full bg-black shadow-md"></div>
 </div>

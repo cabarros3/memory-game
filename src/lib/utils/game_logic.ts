@@ -1,290 +1,131 @@
-import { Cartas } from '../classes/Cartas.js';
-import type { StatusCarta } from '../classes/Cartas.js';
+import {
+	alterarStatusCarta,
+	Cartas,
+	cartasFormamPar,
+	criarCartas,
+	definirClicavelCarta
+} from '../classes/Cartas.js';
+// import type { StatusCarta } from '../classes/Cartas.js';
 import {
 	Tabuleiro,
-	type TemplateTabuleiro,
-	type StatusTabuleiro,
 	type ModoJogo,
-	type ConfiguracaoTemplate
+	configurarTabuleiro,
+	alterarStatusTabuleiro,
+	obterCartaTabuleiro,
+	podeJogar,
+	obterTodasCartasTabuleiro,
+	obterTemplatePorModo,
+	obterConfiguracaoTemplate
 } from '../classes/tabuleiro.js';
-import { Jogador } from '../classes/jogador.js';
-
-// Configurações dos templates
-const TEMPLATES_CONFIG: Record<TemplateTabuleiro, ConfiguracaoTemplate> = {
-	quadrado: { numeroPares: 8, numeroCartas: 16, usaMatriz: true },
-	onibus: { numeroPares: 6, numeroCartas: 12, usaMatriz: false }
-};
-
-// Mapeamento de modo para template
-const MODO_PARA_TEMPLATE: Record<ModoJogo, TemplateTabuleiro> = {
-	adventure: 'onibus',
-	arcade: 'quadrado',
-	timed: 'quadrado',
-	challenge: 'quadrado'
-};
-
-// ============= FUNÇÕES PARA TABULEIRO =============
-
-/**
- * Obtém o template baseado no modo de jogo
- * @param modo Modo de jogo selecionado
- * @returns Template correspondente ao modo
- */
-export function obterTemplatePorModo(modo: ModoJogo): TemplateTabuleiro {
-	return MODO_PARA_TEMPLATE[modo] || 'quadrado';
-}
-
-/**
- * Obtém a configuração de um template
- * @param template Tipo de template
- * @returns Configuração do template
- */
-export function obterConfiguracaoTemplate(template: TemplateTabuleiro): ConfiguracaoTemplate {
-	return TEMPLATES_CONFIG[template] || TEMPLATES_CONFIG.quadrado;
-}
-
-/**
- * Configura o tabuleiro com template e configuração baseado no modo
- * @param tabuleiro Instância do tabuleiro
- */
-export function configurarTabuleiro(tabuleiro: Tabuleiro): void {
-	tabuleiro.template = obterTemplatePorModo(tabuleiro.modo);
-	tabuleiro.configuracao = obterConfiguracaoTemplate(tabuleiro.template);
-}
-
-/**
- * Obtém uma carta específica do tabuleiro por índice
- * @param tabuleiro Instância do tabuleiro
- * @param index Índice da carta no array linear
- * @returns Carta na posição especificada ou null se inválida
- */
-export function obterCartaTabuleiro(tabuleiro: Tabuleiro, index: number): Cartas | null {
-	if (index < 0 || index >= tabuleiro.cartas.length) {
-		return null;
-	}
-	return tabuleiro.cartas[index];
-}
-
-/**
- * Obtém todas as cartas do tabuleiro
- * @param tabuleiro Instância do tabuleiro
- * @returns Array de todas as cartas do tabuleiro
- */
-export function obterTodasCartasTabuleiro(tabuleiro: Tabuleiro): Cartas[] {
-	return tabuleiro.cartas;
-}
-
-/**
- * Verifica se o jogo está em estado jogável
- * @param tabuleiro Instância do tabuleiro
- * @returns True se o jogo pode ser jogado
- */
-export function podeJogar(tabuleiro: Tabuleiro): boolean {
-	return tabuleiro.status === 'jogando';
-}
-
-/**
- * Altera o status do tabuleiro
- * @param tabuleiro Instância do tabuleiro
- * @param novoStatus Novo status a ser aplicado
- */
-export function alterarStatusTabuleiro(tabuleiro: Tabuleiro, novoStatus: StatusTabuleiro): void {
-	tabuleiro.status = novoStatus;
-}
-
-// ============= FUNÇÕES PARA CRIAÇÃO DE CARTAS =============
-
-/**
- * Cria pares de cartas baseado nas imagens fornecidas
- * @param imagens Array de strings representando as imagens das cartas
- * @param numeroCartas Número total de cartas necessárias
- * @returns Array de objetos Cartas
- */
-export function criarCartas(imagens: string[], numeroCartas: number): Cartas[] {
-	const cartas: Cartas[] = [];
-	const numeroPares = numeroCartas / 2;
-
-	for (let i = 0; i < numeroPares; i++) {
-		const imagem = imagens[i % imagens.length];
-		const parId: string = `par-${i}`;
-
-		cartas.push(new Cartas(`carta-${i}-a`, imagem, parId, 'hidden', true, cartas.length));
-
-		cartas.push(new Cartas(`carta-${i}-b`, imagem, parId, 'hidden', true, cartas.length));
-	}
-
-	const cartasEmbaralhadas = embaralharCartas(cartas);
-
-	// Atualizar índices após embaralhamento
-	cartasEmbaralhadas.forEach((carta, index) => {
-		atualizarIndiceCarta(carta, index);
-	});
-
-	return cartasEmbaralhadas;
-}
-
-/**
- * Embaralha um array de cartas usando algoritmo Fisher-Yates
- * @param cartas Array de cartas para embaralhar
- * @returns Array de cartas embaralhadas
- */
-export function embaralharCartas(cartas: Cartas[]): Cartas[] {
-	const cartasEmbaralhadas: Cartas[] = [...cartas];
-
-	for (let i = cartasEmbaralhadas.length - 1; i > 0; i--) {
-		const j: number = Math.floor(Math.random() * (i + 1));
-		[cartasEmbaralhadas[i], cartasEmbaralhadas[j]] = [cartasEmbaralhadas[j], cartasEmbaralhadas[i]];
-	}
-
-	return cartasEmbaralhadas;
-}
-
-// ============= FUNÇÕES PARA CARTAS =============
-
-/**
- * Atualiza o índice de uma carta
- * @param carta Carta a ser atualizada
- * @param novoIndex Novo índice da carta
- */
-export function atualizarIndiceCarta(carta: Cartas, novoIndex: number): void {
-	carta.index = novoIndex;
-}
-
-/**
- * Altera o status de uma carta
- * @param carta Carta a ser alterada
- * @param novoStatus Novo status da carta
- */
-export function alterarStatusCarta(carta: Cartas, novoStatus: StatusCarta): void {
-	carta.status = novoStatus;
-}
-
-/**
- * Define se uma carta é clicável
- * @param carta Carta a ser alterada
- * @param clicavel Se a carta deve ser clicável ou não
- */
-export function definirClicavelCarta(carta: Cartas, clicavel: boolean): void {
-	carta.clicavel = clicavel;
-}
-
-/**
- * Verifica se duas cartas formam um par
- * @param carta1 Primeira carta
- * @param carta2 Segunda carta
- * @returns True se as cartas formam um par
- */
-export function cartasFormamPar(carta1: Cartas, carta2: Cartas): boolean {
-	return carta1.parId === carta2.parId;
-}
-
-// ============= FUNÇÕES PARA JOGADOR =============
-
-/**
- * Incrementa as tentativas do jogador
- * @param jogador Instância do jogador
- */
-export function incrementarTentativasJogador(jogador: Jogador): void {
-	jogador.tentativas++;
-}
-
-/**
- * Incrementa os acertos e pontuação do jogador
- * @param jogador Instância do jogador
- * @param pontos Pontos a serem adicionados (padrão: 10)
- */
-export function incrementarAcertosJogador(jogador: Jogador, pontos: number = 10): void {
-	jogador.acertos++;
-	jogador.pontuacao += pontos;
-}
-
-/**
- * Reseta as estatísticas do jogador
- * @param jogador Instância do jogador
- */
-export function resetarEstatisticasJogador(jogador: Jogador): void {
-	jogador.pontuacao = 0;
-	jogador.tentativas = 0;
-	jogador.acertos = 0;
-	jogador.tempoInicio = Date.now();
-}
-
-/**
- * Calcula estatísticas do jogador
- * @param jogador Instância do jogador
- * @returns Objeto com estatísticas calculadas
- */
-export function calcularEstatisticasJogador(jogador: Jogador): {
-	tempoDecorrido: number;
-	precisao: number;
-	pontuacaoPorTempo: number;
-} {
-	const tempoDecorrido: number = Math.floor((Date.now() - jogador.tempoInicio) / 1000);
-	const precisao: number =
-		jogador.tentativas > 0 ? (jogador.acertos / jogador.tentativas) * 100 : 0;
-	const pontuacaoPorTempo: number = tempoDecorrido > 0 ? jogador.pontuacao / tempoDecorrido : 0;
-
-	return {
-		tempoDecorrido,
-		precisao: Math.round(precisao),
-		pontuacaoPorTempo: Math.round(pontuacaoPorTempo * 100) / 100
-	};
-}
+import {
+	incrementarAcertosJogador,
+	incrementarTentativasJogador,
+	Jogador,
+	resetarEstatisticasJogador
+} from '../classes/jogador.js';
 
 // ============= LÓGICA PRINCIPAL DO JOGO =============
 
 /**
  * Inicializa o tabuleiro com cartas embaralhadas
- * @param tabuleiro Instância do tabuleiro a ser inicializada
- * @param todasImagens Array completo de imagens disponíveis
  */
 export function inicializarTabuleiro(tabuleiro: Tabuleiro, todasImagens: string[]): void {
+	console.log('\n🚀 === INICIALIZANDO TABULEIRO ===');
+	console.log(`Modo: ${tabuleiro.modo}`);
+	console.log(`Imagens disponíveis: ${todasImagens.length}`);
+
 	configurarTabuleiro(tabuleiro);
+
+	console.log(`Template: ${tabuleiro.template}`);
+	console.log(`Configuração:`, tabuleiro.configuracao);
+
 	const numeroCartas = tabuleiro.configuracao.numeroCartas;
 	const cartasEmbaralhadas: Cartas[] = criarCartas(todasImagens, numeroCartas);
 
 	tabuleiro.cartas = cartasEmbaralhadas;
 	tabuleiro.cartasViradas = [];
 	alterarStatusTabuleiro(tabuleiro, 'jogando');
+
+	console.log('✅ Tabuleiro inicializado com sucesso!');
+	console.log('=== FIM INICIALIZAÇÃO ===\n');
 }
 
 /**
- * Vira uma carta e processa a lógica do jogo
- * @param tabuleiro Instância do tabuleiro
- * @param index Índice da carta a ser virada
- * @param jogador Instância do jogador
- * @returns True se a carta foi virada com sucesso
+ * ✅ VERSÃO MELHORADA: Vira uma carta e processa a lógica do jogo
  */
 export function virarCarta(tabuleiro: Tabuleiro, index: number, jogador: Jogador): boolean {
+	console.log(`\n🎯 === VIRANDO CARTA ${index} ===`);
+
 	const carta = obterCartaTabuleiro(tabuleiro, index);
 
 	// Verificações de validade
-	if (!carta || !carta.clicavel || carta.status !== 'hidden' || !podeJogar(tabuleiro)) {
+	if (!carta) {
+		console.error('❌ Carta não encontrada');
 		return false;
 	}
+
+	if (!carta.clicavel) {
+		console.log('⚠️ Carta não é clicável');
+		return false;
+	}
+
+	if (carta.status !== 'hidden') {
+		console.log(`⚠️ Carta já está ${carta.status}`);
+		return false;
+	}
+
+	if (!podeJogar(tabuleiro)) {
+		console.log(`⚠️ Jogo não está em estado jogável: ${tabuleiro.status}`);
+		return false;
+	}
+
+	// Verificar se já há 2 cartas viradas
+	if (tabuleiro.cartasViradas.length >= 2) {
+		console.log('⚠️ Já há 2 cartas viradas, aguarde...');
+		return false;
+	}
+
+	console.log(`📋 Virando carta: ${carta.id} (${carta.parId}) - ${carta.imagem}`);
 
 	// Virar a carta
 	alterarStatusCarta(carta, 'visible');
 	tabuleiro.cartasViradas.push(carta);
 
+	console.log(`📊 Cartas viradas: ${tabuleiro.cartasViradas.length}/2`);
+
 	// Verificar se completou um par
 	if (tabuleiro.cartasViradas.length === 2) {
 		incrementarTentativasJogador(jogador);
-		verificarPar(tabuleiro, jogador);
+
+		// Usar setTimeout para dar tempo da UI atualizar
+		setTimeout(() => {
+			verificarPar(tabuleiro, jogador);
+		}, 100);
 	}
 
+	console.log('✅ Carta virada com sucesso!');
+	console.log('=== FIM VIRAR CARTA ===\n');
 	return true;
 }
 
 /**
  * Verifica se as duas cartas viradas formam um par
- * @param tabuleiro Instância do tabuleiro
- * @param jogador Instância do jogador
  */
 export function verificarPar(tabuleiro: Tabuleiro, jogador: Jogador): void {
+	console.log('\n🧩 === VERIFICANDO PAR ===');
+
+	if (tabuleiro.cartasViradas.length !== 2) {
+		console.error('❌ Número incorreto de cartas viradas:', tabuleiro.cartasViradas.length);
+		return;
+	}
+
 	const [carta1, carta2]: [Cartas, Cartas] = tabuleiro.cartasViradas as [Cartas, Cartas];
 
+	console.log(`Comparando: ${carta1.id} (${carta1.parId}) vs ${carta2.id} (${carta2.parId})`);
+
 	if (cartasFormamPar(carta1, carta2)) {
+		console.log('🎉 PAR ENCONTRADO!');
+
 		// Par encontrado!
 		marcarCartasComoPar(carta1, carta2);
 		incrementarAcertosJogador(jogador);
@@ -292,20 +133,26 @@ export function verificarPar(tabuleiro: Tabuleiro, jogador: Jogador): void {
 
 		// Verificar condição de vitória
 		if (verificarVitoria(tabuleiro)) {
+			console.log('🏆 JOGO FINALIZADO - VITÓRIA!');
 			alterarStatusTabuleiro(tabuleiro, 'finalizado');
 		}
 	} else {
+		console.log('❌ Par incorreto - escondendo cartas em 1 segundo...');
+
 		// Par incorreto - esconder cartas após delay
-		setTimeout(() => esconderCartas(carta1, carta2, tabuleiro), 1000);
+		setTimeout(() => {
+			esconderCartas(carta1, carta2, tabuleiro);
+		}, 1000);
 	}
+
+	console.log('=== FIM VERIFICAÇÃO PAR ===\n');
 }
 
 /**
  * Marca duas cartas como par encontrado
- * @param carta1 Primeira carta do par
- * @param carta2 Segunda carta do par
  */
 function marcarCartasComoPar(carta1: Cartas, carta2: Cartas): void {
+	console.log(`✅ Marcando como par: ${carta1.id} e ${carta2.id}`);
 	alterarStatusCarta(carta1, 'matched');
 	alterarStatusCarta(carta2, 'matched');
 	definirClicavelCarta(carta1, false);
@@ -314,11 +161,9 @@ function marcarCartasComoPar(carta1: Cartas, carta2: Cartas): void {
 
 /**
  * Esconde duas cartas e limpa o array de cartas viradas
- * @param carta1 Primeira carta a esconder
- * @param carta2 Segunda carta a esconder
- * @param tabuleiro Instância do tabuleiro
  */
 function esconderCartas(carta1: Cartas, carta2: Cartas, tabuleiro: Tabuleiro): void {
+	console.log(`🙈 Escondendo cartas: ${carta1.id} e ${carta2.id}`);
 	alterarStatusCarta(carta1, 'hidden');
 	alterarStatusCarta(carta2, 'hidden');
 	tabuleiro.cartasViradas = [];
@@ -326,59 +171,73 @@ function esconderCartas(carta1: Cartas, carta2: Cartas, tabuleiro: Tabuleiro): v
 
 /**
  * Verifica se todas as cartas foram encontradas (condição de vitória)
- * @param tabuleiro Instância do tabuleiro
- * @returns True se o jogador venceu
  */
 export function verificarVitoria(tabuleiro: Tabuleiro): boolean {
 	const todasCartas: Cartas[] = obterTodasCartasTabuleiro(tabuleiro);
+	const cartasEncontradas = todasCartas.filter((carta) => carta.status === 'matched').length;
+	const totalCartas = todasCartas.length;
+
+	console.log(`📊 Progresso: ${cartasEncontradas}/${totalCartas} cartas encontradas`);
+
 	return todasCartas.every((carta: Cartas) => carta.status === 'matched');
 }
 
 /**
  * Cria uma nova instância de tabuleiro com configurações específicas
- * @param id Identificador único do tabuleiro
- * @param modo Modo de jogo (determina automaticamente o template)
- * @param imagens Array de imagens disponíveis
- * @returns Nova instância de Tabuleiro inicializada
  */
 export function criarTabuleiro(id: string, modo: ModoJogo, imagens: string[]): Tabuleiro {
+	console.log(`\n🏗️ Criando tabuleiro: ${id} (${modo})`);
+
+	// Validar antes de criar
+	if (!validarConfiguracaoJogo(modo, imagens)) {
+		throw new Error(`❌ Configuração inválida para modo ${modo} com ${imagens.length} imagens`);
+	}
+
 	const tabuleiro: Tabuleiro = new Tabuleiro(id, modo, 'aguardando');
 	inicializarTabuleiro(tabuleiro, imagens);
+
+	console.log('✅ Tabuleiro criado com sucesso!\n');
 	return tabuleiro;
 }
 
 /**
  * Reseta o jogo para o estado inicial
- * @param tabuleiro Instância do tabuleiro a ser resetada
- * @param jogador Instância do jogador a ser resetada
- * @param imagens Array de imagens para reinicializar o tabuleiro
  */
 export function resetarJogo(tabuleiro: Tabuleiro, jogador: Jogador, imagens: string[]): void {
+	console.log('\n🔄 === RESETANDO JOGO ===');
+
 	// Reset do tabuleiro
 	alterarStatusTabuleiro(tabuleiro, 'aguardando');
 	inicializarTabuleiro(tabuleiro, imagens);
 
 	// Reset do jogador
 	resetarEstatisticasJogador(jogador);
+
+	console.log('✅ Jogo resetado com sucesso!');
+	console.log('=== FIM RESET ===\n');
 }
 
 /**
  * Valida se uma configuração de jogo é válida
- * @param modo Modo de jogo
- * @param imagens Array de imagens disponíveis
- * @returns True se a configuração é válida
  */
 export function validarConfiguracaoJogo(modo: ModoJogo, imagens: string[]): boolean {
 	const template = obterTemplatePorModo(modo);
 	const configuracao = obterConfiguracaoTemplate(template);
 	const numeroPares = configuracao.numeroPares;
-	return imagens.length >= numeroPares;
+
+	const valido = imagens.length >= numeroPares;
+
+	if (!valido) {
+		console.error(
+			`❌ Configuração inválida: Modo ${modo} precisa de ${numeroPares} imagens, mas só há ${imagens.length} disponíveis`
+		);
+	}
+
+	return valido;
 }
 
 /**
  * Obtém dica para o jogador (mostra brevemente um par válido)
- * @param tabuleiro Instância do tabuleiro
- * @returns Array com duas cartas que formam um par ou null se não houver pares disponíveis
  */
 export function obterDica(tabuleiro: Tabuleiro): [Cartas, Cartas] | null {
 	const cartasOcultas: Cartas[] = obterTodasCartasTabuleiro(tabuleiro).filter(
