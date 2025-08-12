@@ -547,8 +547,8 @@ onMount(async () => {
     '/images/img2.png',
     '/images/img3.png',
     '/images/img4.jpg',
-    '/vectors/Onibus.jpg',
-    '/vectors/img4.png'
+    '/images/Onibus.jpg',
+    '/images/chuu.png'
   ];
 
   const temporizador = criarTemporizador((tempoFormatado, s) => {
