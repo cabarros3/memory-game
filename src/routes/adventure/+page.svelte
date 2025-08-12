@@ -58,6 +58,7 @@
   function closeModal() {
     showIntroModal = false;
     isFromHelpButton = false;
+    temporizador.iniciar()
   }
 
   // 🔍 FUNÇÃO DE DEBUG PARA VERIFICAR PARES
@@ -268,7 +269,7 @@
         console.log('Usando cartas fallback corrigidas:', cartas);
       }
       
-      temporizador.iniciar();
+      // temporizador.iniciar();
       console.log('Temporizador iniciado');
     } catch (error) {
       console.error('Erro ao inicializar jogo:', error);
