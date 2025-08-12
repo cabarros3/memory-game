@@ -2,6 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import { page } from '$app/stores';
   import { get } from 'svelte/store';
+  import { Jogador } from "$lib/classes/jogador";
   import { LogOut, Pause, Play } from 'lucide-svelte';
 
   const dispatch = createEventDispatcher();
@@ -11,7 +12,7 @@
   export let tempo: string = "00:00";
   export let nivel: number = 1;
   export let tentativas: number = 0;
-  export let acertos: number = 0
+  export let acertos = 0
   export let instructions: string = "Need help?"
   export let jogoPausado: boolean = false;
 
