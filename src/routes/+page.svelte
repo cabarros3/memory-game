@@ -17,7 +17,7 @@
   <div class="flex flex-col justify-center items-center py-44 lg:justify-start lg:pr-[500px] lg:py-80">
       <div class="flex flex-col gap-5 items-center justify-center my-5">
   <Botao text="Adventure" size="lg" className="bg-color3 hover:bg-color2 cursor-pointer" onClick={()=> goto("/adventure")} />
-  <Botao text="Arcade" size="lg" className="bg-color3 hover:bg-color2 cursor-pointer" onClick={()=> goto("/arcade")} />
+  <!-- <Botao text="Arcade" size="lg" className="bg-color3 hover:bg-color2 cursor-pointer" onClick={()=> goto("/arcade")} /> -->
   <Botao text="About" size="sm" className="bg-color3 hover:bg-color2 cursor-pointer" onClick={()=> goto("/about")} />
 </div>
 
