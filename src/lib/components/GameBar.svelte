@@ -50,11 +50,11 @@
   <span class="font-mono">{tempo}</span>
 </div>
   <div class="bg-color1 px-5 text-sm shadow-lg flex flex-col justify-center items-center rounded-2xl">
-    <span>Tentativas</span>
+    <span>Attempts</span>
     <span>{tentativas}</span>
   </div>
   <div class="bg-color2 px-5 text-sm shadow-lg flex flex-col justify-center items-center rounded-2xl">
-    <span>Acertos</span>
+    <span>Matches</span>
     <span>{acertos}</span>
   </div>
    {#if !pathname.includes('/adventure')}
