@@ -29,6 +29,8 @@
 
   let jogoPausado: boolean = false;
   let tempo: string = '00:00';
+  let tempoRestante: string = '01:00'; // 60 segundos
+  let tempoEsgotado: boolean = false;
   let totalSegundos: number = 0;
   let nivel: number = 1;
   let tentativas: number = 0;
@@ -37,6 +39,14 @@
 
   // ✅ NOVA VARIÁVEL DE CONTROLE
   let jogoFinalizado: boolean = false;
+
+  // ✅ CONFIGURAÇÃO DO LIMITE (90 segundos para 6 pares)
+  const TEMPO_LIMITE = 60; // segundos
+
+  // 📋 MODAL DE INSTRUÇÕES
+  let showIntroModal: boolean = true;
+  let isFromHelpButton: boolean = false;
+
 
   // ✅ CORRIGIDO: Todas as imagens na mesma pasta
   const imagensDisponiveis: string[] = [
@@ -48,13 +58,150 @@
     '/images/chuu.png'
   ];
 
-  const temporizador = criarTemporizador((tempoFormatado, s) => {
-    tempo = tempoFormatado;
-    totalSegundos = s;
-  });
+  // const temporizador = criarTemporizador((tempoFormatado, s) => {
+  //   tempo = tempoFormatado;
+  //   totalSegundos = s;
+  // });
+
+  // ✅ TEMPORIZADOR ATUALIZADO COM CALLBACK EXPANDIDO
+const temporizador = criarTemporizador(
+  (tempoRestanteFormatado, segundosRestantes) => {
+    tempoRestante = tempoRestanteFormatado;
+    
+    // Alerta quando restam 20 segundos
+    if (segundosRestantes === 20 && !tempoEsgotado) {
+      console.log('⚠️ 20 segundos restantes!');
+    }
+    
+    // Alerta quando restam 10 segundos
+    if (segundosRestantes === 10 && !tempoEsgotado) {
+      console.log('🚨 10 segundos restantes!');
+    }
+  },
+  TEMPO_LIMITE // 60 segundos
+);
+
+
+function handlePlayAgain() {
+  console.log('🔄 Jogador quer jogar novamente');
+  showVictoryModal = false;
+  
+  // ✅ RESET DAS VARIÁVEIS DE TEMPO
+  tempoEsgotado = false;
+  
+  // ✅ RESET DO JOGO
+  inicializarJogo();
+  
+  try {
+    if (tabuleiro) {
+      // ✅ resetarJogo não retorna valor, então não verificamos
+      resetarJogo(tabuleiro, jogador, imagensDisponiveis);
+      cartas = tabuleiro.cartas;
+      
+      // ✅ RESET E INICIAR TIMER
+      temporizador.resetar(); // Isso já define tempoRestante automaticamente via callback
+      temporizador.iniciar();
+      
+      console.log('✅ Jogo resetado com tabuleiro existente');
+      console.log('📊 Novas cartas:', cartas.length);
+      
+    } else {
+      // Recrear tabuleiro se necessário
+      tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
+      cartas = tabuleiro.cartas;
+      
+      // ✅ RESET E INICIAR TIMER
+      temporizador.resetar(); // Isso já define tempoRestante automaticamente via callback
+      temporizador.iniciar();
+      
+      console.log('✅ Novo tabuleiro criado');
+      console.log('📊 Novas cartas:', cartas.length);
+    }
+    
+    // ✅ DEBUG DO ESTADO APÓS RESET
+    console.log('🔄 Estado após reset:');
+    console.log(`  - Acertos: ${acertos}`);
+    console.log(`  - Tentativas: ${tentativas}`);
+    console.log(`  - Tempo restante: ${tempoRestante}`);
+    console.log(`  - Jogo finalizado: ${jogoFinalizado}`);
+    console.log(`  - Tempo esgotado: ${tempoEsgotado}`);
+    
+  } catch (error) {
+    console.error('❌ Erro ao resetar jogo:', error);
+    
+    // ✅ FALLBACK: criar novo tabuleiro
+    try {
+      tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
+      cartas = tabuleiro.cartas;
+      
+      temporizador.resetar();
+      temporizador.iniciar();
+      
+      console.log('🆘 Tabuleiro recriado após erro');
+      
+    } catch (fallbackError) {
+      console.error('❌ Erro crítico no fallback:', fallbackError);
+      
+      // ✅ USAR CARTAS DE EMERGÊNCIA
+      cartas = criarCartasFallback();
+      
+      temporizador.resetar();
+      temporizador.iniciar();
+      
+      console.log('🚨 Usando cartas de emergência');
+    }
+  }
+  
+  // ✅ FORÇA ATUALIZAÇÃO DAS VARIÁVEIS REATIVAS
+  setTimeout(() => {
+    acertos = jogador.acertos;
+    tentativas = jogador.tentativas;
+    console.log('🔄 Variáveis reativas atualizadas:', { acertos, tentativas });
+  }, 100);
+}
+
+// function handleTimeUp() {
+//   if (jogoFinalizado || tempoEsgotado) return;
+  
+//   tempoEsgotado = true;
+//   console.log('⏰ Tempo esgotado!');
+  
+//   jogoFinalizado = true;
+  
+//   setTimeout(() => {
+//     alert(`⏰ Tempo Esgotado!
+
+// Você não conseguiu completar o jogo em ${TEMPO_LIMITE} segundos.
+
+// 🎯 Acertos: ${acertos} de 6 pares
+// 📊 Tentativas: ${tentativas}
+
+// Tente novamente!`);
+    
+//     handlePlayAgain();
+//   }, 300);
+// }
 
   // ✅ FUNÇÃO CORRIGIDA PARA INICIALIZAR ACERTOS
-  function inicializarJogo() {
+function handleTimeUp() {
+  if (jogoFinalizado || tempoEsgotado) return;
+  
+  tempoEsgotado = true;
+  jogoFinalizado = true;
+  temporizador.pausar();
+  
+  console.log('⏰ Tempo esgotado!');
+  console.log(`📊 Estado final: ${acertos}/${cartas.length / 2} pares encontrados`);
+  console.log(`🎯 Tentativas: ${tentativas}`);
+  
+  // ✅ ABRE O MODAL DE FIM DE JOGO (mesmo modal da vitória)
+  setTimeout(() => {
+    showVictoryModal = true;
+  }, 300);
+}
+  
+
+function inicializarJogo() {
     jogador = new Jogador('Jogador');
     acertos = jogador.acertos; // Sincroniza com o objeto jogador
     tentativas = jogador.tentativas;
@@ -62,9 +209,6 @@
     console.log('🎮 Jogo inicializado - Acertos:', acertos, 'Tentativas:', tentativas);
   }
 
-  // 📋 MODAL DE INSTRUÇÕES
-  let showIntroModal: boolean = true;
-  let isFromHelpButton: boolean = false;
 
   function openFromHelpButton() {
     showIntroModal = true;
@@ -243,49 +387,95 @@ function fimDeJogo() {
 
 // ✅ FUNÇÕES PARA LIDAR COM OS EVENTOS DO MODAL
 // ✅ FUNÇÃO CORRIGIDA PARA LIDAR COM JOGAR NOVAMENTE
-function handlePlayAgain() {
-  console.log('🔄 Jogador quer jogar novamente');
-  showVictoryModal = false;
+// function handlePlayAgain() {
+//   console.log('🔄 Jogador quer jogar novamente');
+//   showVictoryModal = false;
   
-  // Resetar o jogo
-  inicializarJogo();
+//   // Resetar o jogo
+//   inicializarJogo();
   
-  try {
-    if (tabuleiro) {
-      // ✅ resetarJogo não retorna valor, então não verificamos
-      resetarJogo(tabuleiro, jogador, imagensDisponiveis);
-      cartas = tabuleiro.cartas;
-      temporizador.resetar();
-      temporizador.iniciar();
-      console.log('✅ Jogo resetado com tabuleiro existente');
-    } else {
-      // Recrear tabuleiro se necessário
-      tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
-      cartas = tabuleiro.cartas;
-      temporizador.resetar();
-      temporizador.iniciar();
-      console.log('✅ Novo tabuleiro criado');
-    }
-  } catch (error) {
-    console.error('❌ Erro ao resetar jogo:', error);
+//   try {
+//     if (tabuleiro) {
+//       // ✅ resetarJogo não retorna valor, então não verificamos
+//       resetarJogo(tabuleiro, jogador, imagensDisponiveis);
+//       cartas = tabuleiro.cartas;
+//       temporizador.resetar();
+//       temporizador.iniciar();
+//       console.log('✅ Jogo resetado com tabuleiro existente');
+//     } else {
+//       // Recrear tabuleiro se necessário
+//       tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
+//       cartas = tabuleiro.cartas;
+//       temporizador.resetar();
+//       temporizador.iniciar();
+//       console.log('✅ Novo tabuleiro criado');
+//     }
+//   } catch (error) {
+//     console.error('❌ Erro ao resetar jogo:', error);
     
-    // ✅ FALLBACK: criar novo tabuleiro
-    try {
-      tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
-      cartas = tabuleiro.cartas;
-      temporizador.resetar();
-      temporizador.iniciar();
-      console.log('🆘 Tabuleiro recriado após erro');
-    } catch (fallbackError) {
-      console.error('❌ Erro crítico no fallback:', fallbackError);
-      // Usar cartas de emergência
-      cartas = criarCartasFallback();
-      temporizador.resetar();
-      temporizador.iniciar();
-      console.log('🚨 Usando cartas de emergência');
-    }
-  }
-}
+//     // ✅ FALLBACK: criar novo tabuleiro
+//     try {
+//       tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
+//       cartas = tabuleiro.cartas;
+//       temporizador.resetar();
+//       temporizador.iniciar();
+//       console.log('🆘 Tabuleiro recriado após erro');
+//     } catch (fallbackError) {
+//       console.error('❌ Erro crítico no fallback:', fallbackError);
+//       // Usar cartas de emergência
+//       cartas = criarCartasFallback();
+//       temporizador.resetar();
+//       temporizador.iniciar();
+//       console.log('🚨 Usando cartas de emergência');
+//     }
+//   }
+// }
+
+// function handlePlayAgain() {
+//   console.log('🔄 Jogador quer jogar novamente');
+//   showVictoryModal = false;
+  
+//   // ✅ RESET DAS VARIÁVEIS DE TEMPO
+//   tempoEsgotado = false;
+//   tempoRestante = temporizador.formatarTempoRestante(TEMPO_LIMITE);
+  
+//   // Resetar o jogo
+//   inicializarJogo();
+  
+//   try {
+//     if (tabuleiro) {
+//       resetarJogo(tabuleiro, jogador, imagensDisponiveis);
+//       cartas = tabuleiro.cartas;
+//       temporizador.resetar();
+//       temporizador.iniciar();
+//       console.log('✅ Jogo resetado com tabuleiro existente');
+//     } else {
+//       tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
+//       cartas = tabuleiro.cartas;
+//       temporizador.resetar();
+//       temporizador.iniciar();
+//       console.log('✅ Novo tabuleiro criado');
+//     }
+//   } catch (error) {
+//     console.error('❌ Erro ao resetar jogo:', error);
+//     try {
+//       tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
+//       cartas = tabuleiro.cartas;
+//       temporizador.resetar();
+//       temporizador.iniciar();
+//       console.log('🆘 Tabuleiro recriado após erro');
+//     } catch (fallbackError) {
+//       console.error('❌ Erro crítico no fallback:', fallbackError);
+//       cartas = criarCartasFallback();
+//       temporizador.resetar();
+//       temporizador.iniciar();
+//       console.log('🚨 Usando cartas de emergência');
+//     }
+//   }
+// }
+
+
+
 function handleGoHome() {
   console.log('🏠 Voltando para o menu principal');
   showVictoryModal = false;
@@ -379,6 +569,18 @@ function handleGoHome() {
 
   // ✅ FUNÇÃO VIRAR CARTA CORRIGIDA
 function virarCarta(index: number) {
+
+  // ✅ PROTEÇÃO CONTRA TEMPO ESGOTADO
+  if (tempoEsgotado) {
+    console.log('⏰ Tempo esgotado, não é possível virar cartas');
+    return;
+  }
+  
+  if (jogoFinalizado) {
+    console.log('🛑 Jogo já finalizado, ignorando jogada');
+    return;
+  }
+
   // ✅ PROTEÇÃO CONTRA JOGO JÁ FINALIZADO
   if (jogoFinalizado) {
     console.log('🛑 Jogo já finalizado, ignorando jogada');
@@ -484,51 +686,108 @@ function virarCarta(index: number) {
     }
   }
 
-  onMount(async () => {
-    console.log('🚀 Montando componente Adventure...');
+
+//   onMount(async () => {
+//   console.log('🚀 Montando componente Adventure...');
+  
+//   try {
+//     inicializarJogo();
+//     console.log('✅ Jogador criado:', jogador);
     
-    try {
-      // ✅ USA FUNÇÃO DE INICIALIZAÇÃO (que já reseta jogoFinalizado)
-      inicializarJogo();
-      console.log('✅ Jogador criado:', jogador);
-      
-      tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
-      console.log('✅ Tabuleiro criado:', tabuleiro);
-      console.log('📋 Tabuleiro.cartas:', tabuleiro?.cartas);
-      
-      if (tabuleiro && tabuleiro.cartas && tabuleiro.cartas.length > 0) {
-        cartas = tabuleiro.cartas;
-        console.log('✅ Cartas atribuídas do tabuleiro:', cartas.length);
-      } else {
-        console.warn('⚠️ Tabuleiro ou cartas são undefined! Usando fallback...');
-        cartas = criarCartasFallback();
-        console.log('✅ Usando cartas fallback:', cartas.length);
-      }
-      
-      // ✅ GARANTE QUE ACERTOS ESTÁ SINCRONIZADO
-      acertos = jogador.acertos;
-      tentativas = jogador.tentativas;
-      
-      // ✅ DEBUG DO ESTADO INICIAL
-      console.log(`📊 Estado inicial:`);
-      console.log(`  - Total de cartas: ${cartas.length}`);
-      console.log(`  - Pares esperados: ${cartas.length / 2}`);
-      console.log(`  - Acertos iniciais: ${acertos}`);
-      console.log(`  - Jogo finalizado: ${jogoFinalizado}`);
-      console.log('⏱️ Temporizador será iniciado quando modal for fechado');
-      
-    } catch (error) {
-      console.error('❌ Erro ao inicializar jogo:', error);
-      
-      // ✅ EM CASO DE ERRO, AINDA INICIALIZA O JOGADOR
-      if (!jogador) {
-        inicializarJogo();
-      }
-      
+//     tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
+//     console.log('✅ Tabuleiro criado:', tabuleiro);
+    
+//     if (tabuleiro && tabuleiro.cartas && tabuleiro.cartas.length > 0) {
+//       cartas = tabuleiro.cartas;
+//       console.log('✅ Cartas atribuídas do tabuleiro:', cartas.length);
+//     } else {
+//       console.warn('⚠️ Tabuleiro ou cartas são undefined! Usando fallback...');
+//       cartas = criarCartasFallback();
+//       console.log('✅ Usando cartas fallback:', cartas.length);
+//     }
+    
+//     // ✅ CONFIGURA CALLBACK DE TEMPO ESGOTADO
+//     temporizador.setTimeUpCallback(handleTimeUp);
+    
+//     // ✅ INICIALIZA TEMPO RESTANTE
+//     tempoRestante = temporizador.formatarTempoRestante(TEMPO_LIMITE);
+    
+//     acertos = jogador.acertos;
+//     tentativas = jogador.tentativas;
+    
+//     console.log(`📊 Estado inicial:`);
+//     console.log(`  - Total de cartas: ${cartas.length}`);
+//     console.log(`  - Pares esperados: ${cartas.length / 2}`);
+//     console.log(`  - Tempo limite: ${TEMPO_LIMITE} segundos`);
+//     console.log(`  - Acertos iniciais: ${acertos}`);
+    
+//   } catch (error) {
+//     console.error('❌ Erro ao inicializar jogo:', error);
+    
+//     if (!jogador) {
+//       inicializarJogo();
+//     }
+    
+//     cartas = criarCartasFallback();
+//     temporizador.setTimeUpCallback(handleTimeUp);
+//     tempoRestante = temporizador.formatarTempoRestante(TEMPO_LIMITE);
+//     console.log('🆘 Usando cartas de emergência:', cartas.length);
+//   }
+// });
+
+
+onMount(async () => {
+  console.log('🚀 Montando componente Adventure...');
+  
+  try {
+    inicializarJogo();
+    console.log('✅ Jogador criado:', jogador);
+    
+    tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
+    console.log('✅ Tabuleiro criado:', tabuleiro);
+    
+    if (tabuleiro && tabuleiro.cartas && tabuleiro.cartas.length > 0) {
+      cartas = tabuleiro.cartas;
+      console.log('✅ Cartas atribuídas do tabuleiro:', cartas.length);
+    } else {
+      console.warn('⚠️ Tabuleiro ou cartas são undefined! Usando fallback...');
       cartas = criarCartasFallback();
-      console.log('🆘 Usando cartas de emergência:', cartas.length);
+      console.log('✅ Usando cartas fallback:', cartas.length);
     }
-  });
+    
+    // ✅ CONFIGURA CALLBACK DE TEMPO ESGOTADO
+    temporizador.setTimeUpCallback(handleTimeUp);
+    
+    // ✅ INICIALIZA TEMPO RESTANTE usando a função correta
+    tempoRestante = temporizador.formatarTempo(TEMPO_LIMITE);
+    
+    acertos = jogador.acertos;
+    tentativas = jogador.tentativas;
+    
+    console.log(`📊 Estado inicial:`);
+    console.log(`  - Total de cartas: ${cartas.length}`);
+    console.log(`  - Pares esperados: ${cartas.length / 2}`);
+    console.log(`  - Tempo limite: ${TEMPO_LIMITE} segundos`);
+    console.log(`  - Tempo restante inicial: ${tempoRestante}`);
+    console.log(`  - Acertos iniciais: ${acertos}`);
+    
+  } catch (error) {
+    console.error('❌ Erro ao inicializar jogo:', error);
+    
+    if (!jogador) {
+      inicializarJogo();
+    }
+    
+    cartas = criarCartasFallback();
+    temporizador.setTimeUpCallback(handleTimeUp);
+    
+    // ✅ CORRIGIDO: usar formatarTempo em vez de formatarTempoRestante
+    tempoRestante = temporizador.formatarTempo(TEMPO_LIMITE);
+    
+    console.log('🆘 Usando cartas de emergência:', cartas.length);
+    console.log('🆘 Tempo restante definido como:', tempoRestante);
+  }
+});
 
   onDestroy(() => {
     temporizador.pausar();
@@ -605,12 +864,12 @@ function virarCarta(index: number) {
 <!-- ✅ MODAL DE VITÓRIA -->
 <VictoryModal
   open={showVictoryModal}
-  jogadorNome={jogador?.nome || ''}
-  {tempo}
   {acertos}
   {tentativas}
   precisao={tentativas > 0 ? Math.round((acertos * 2 / tentativas) * 100) : 0}
   {nivel}
+  {tempoEsgotado}
+  totalPares={6}
   isAdventure={true}
   on:playAgain={handlePlayAgain}
   on:goHome={handleGoHome}
@@ -619,7 +878,7 @@ function virarCarta(index: number) {
 <!-- GAMEBAR E JOGO -->
 <div class="flex min-h-screen flex-col items-center bg-[url('/vectors/img4.png')] bg-cover bg-center">
   <GameBar
-    {tempo}
+    {tempoRestante}
     {nivel}
     {tentativas}
     {acertos}
@@ -638,70 +897,3 @@ function virarCarta(index: number) {
     </div>
   {/if}
 </div>
-
-<!-- <Modal
-  open={showIntroModal}
-  title="🧠 How to Play?"
-  showCloseButton={isFromHelpButton}
-  on:close={closeModal}
->
-  <div class="flex flex-col gap-3">
-    <p>Welcome to the MemoGame: Botafogo!</p>
-    <p>Your goal is to find all the matching pairs hidden behind the bus windows.</p>
-    <p>Tap or click on two cards to reveal them. If they match, they stay open. If not, they'll flip back – so try to remember their positions!</p>
-    <p>Each level gets a little harder, with more cards and fewer chances.</p>
-    <p>Pay attention, plan your moves, and try to complete the level with the fewest attempts possible!</p>
-    <p>Good luck – and have fun discovering all the matching pairs!</p>
-  </div>
-
-  <div slot="footer">
-    {#if !isFromHelpButton}
-      <button
-        class="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700"
-        on:click={closeModal}
-      >
-        I'm ready!
-      </button>
-    {/if}
-  </div>
-</Modal>
-
-<!-- GAMEBAR E JOGO -->
-<!-- <div class="flex min-h-screen flex-col items-center bg-[url('/vectors/img4.png')] bg-cover bg-center">
-  <GameBar
-    {tempo}
-    {nivel}
-    {tentativas}
-    {acertos}
-    {jogoPausado}
-    on:reabrirModal={openFromHelpButton}
-    on:pause={handlePause}
-    on:exit={handleExit}
-  />
-
-  {#if cartas && cartas.length > 0}
-    <GameBus cartasClasse={cartas} {virarCarta} />
-  {:else}
-    <div class="bg-yellow-100 p-4 rounded">
-      <p>Carregando cartas... ou erro na inicialização</p>
-      <p class="text-sm text-gray-600">Verifique se as imagens existem na pasta /images/</p>
-    </div>
-  {/if} --> 
-
-
-  <!-- ✅ BOTÃO DE DEBUG TEMPORÁRIO (remova depois de testar) -->
-<!--   
-  <div class="fixed bottom-4 right-4 bg-red-500 text-white p-2 rounded text-xs">
-    <button on:click={() => {
-      console.log('🔍 DEBUG MANUAL:');
-      console.log('Cartas:', cartas?.map(c => c.status));
-      console.log('Matched:', cartas?.filter(c => c.status === 'matched').length);
-      console.log('Total:', cartas?.length);
-      console.log('Jogo finalizado:', jogoFinalizado);
-      console.log('Acertos jogador:', jogador?.acertos);
-    }}>
-      Debug
-    </button>
-  </div>
-  -->
-<!-- </div> -->
