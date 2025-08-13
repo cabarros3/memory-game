@@ -840,14 +840,17 @@ onMount(async () => {
   showCloseButton={isFromHelpButton}
   on:close={closeModal}
 >
-  <div class="flex flex-col gap-3">
-    <p>Welcome to the MemoGame: Botafogo!</p>
-    <p>Your goal is to find all the matching pairs hidden behind the bus windows.</p>
-    <p>Tap or click on two cards to reveal them. If they match, they stay open. If not, they'll flip back – so try to remember their positions!</p>
-    <p>Each level gets a little harder, with more cards and fewer chances.</p>
-    <p>Pay attention, plan your moves, and try to complete the level with the fewest attempts possible!</p>
-    <p>Good luck – and have fun discovering all the matching pairs!</p>
-  </div>
+ <div class="flex flex-col gap-3 text-gray-800 font-medium">
+  <p>🎮 <strong>Welcome to the MemoGame: Botafire!</strong> 🔥</p>
+  <p>The legend is real. A beast that conquers the hills of the BR-101. Welcome to <em>The BotaFire.</em></p>
+  <p>Now, the challenge is <strong>YOUR'S</strong>. Dive into this epic game and prove your memory is worthy of the legend. ⚔️🧠</p>
+  <p>Your mission: <strong>Tame the chaos!</strong> </p>
+  <p>🐉 Tap or click on two cards to reveal the icons of our daily campus survival—from the legendary <span class="italic">coxinha</span> 🥐 to the little dog who's the real dean 🐕‍🦺.</p>
+  <p>If they match, they stay open. If not, they'll flip back into the shadows, so you must remember their positions.</p>
+  <p>Pay close attention and plan your moves wisely. Speed is your enemy. Memory is your only weapon. Try to clear the board with the fewest attempts possible.</p>
+  <p>🚀 Ready to play? Jump in now and make history! 🎉</p>
+</div>
+
 
   <div slot="footer">
     {#if !isFromHelpButton}
