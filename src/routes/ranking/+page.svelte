@@ -93,9 +93,6 @@
   }
 </script>
 
-<svelte:head>
-  <title>🏆 Ranking - Jogo da Memória</title>
-</svelte:head>
 
 <main class="min-h-screen ">
   <div class="container mx-auto px-4 py-8">
@@ -138,22 +135,7 @@
       >
         🔥 All Time
       </button>
-      <!-- <button
-        class="px-6 py-3 rounded-full font-semibold transition-all {filtroAtual === 'semana' 
-          ? 'bg-white text-purple-600' 
-          : 'bg-white/20 text-black hover:bg-white/30'}"
-        on:click={() => filtrarRanking('semana')}
-      >
-        📅 This Week
-      </button>
-      <button
-        class="px-6 py-3 rounded-full font-semibold transition-all {filtroAtual === 'hoje' 
-          ? 'bg-white text-purple-600' 
-          : 'bg-white/20 text-black hover:bg-white/30'}"
-        on:click={() => filtrarRanking('hoje')}
-      >
-         Today
-      </button> -->
+
     </div>
 
     <!-- Ranking Principal -->
@@ -266,21 +248,3 @@
 
   </div>
 </main>
-
-<style>
-  /* Animações personalizadas */
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .container > * {
-    animation: slideUp 0.6s ease-out forwards;
-  }
-</style>

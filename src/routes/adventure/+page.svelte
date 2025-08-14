@@ -62,7 +62,10 @@
     '/images/img3.png',
     '/images/img4.jpg',
     '/images/img6.jpeg',
-    '/images/chuu.png'
+    '/images/chuu.png',
+    '/images/Onibus.jpg',
+    '/images/img2.png',
+    '/images/MemoBg.png'
   ];
 
   // ✅ TEMPORIZADOR ATUALIZADO COM CALLBACK EXPANDIDO
@@ -332,53 +335,54 @@
     return grupos;
   }
 
-  function criarCartasFallback(): Cartas[] {
-    console.log('🏗️ Criando cartas fallback...');
-    
-    const imagensUnicas = imagensDisponiveis.slice(0, 6);
-    console.log('🖼️ Imagens selecionadas:', imagensUnicas);
-    
-    const cartasArray: Cartas[] = [];
-    
-    imagensUnicas.forEach((imagem, index) => {
-      const pairId = `pair-${index}`;
-      
-      console.log(`🎴 Criando par ${index + 1}: ${imagem}`);
-      
-      const carta1 = new Cartas(
-        `carta-${index}-a`,
-        imagem,
-        pairId,
-        'hidden'
-      );
-      
-      const carta2 = new Cartas(
-        `carta-${index}-b`,
-        imagem,
-        pairId,
-        'hidden'
-      );
-      
-      cartasArray.push(carta1, carta2);
-      
-      console.log(`  ✅ Criadas: ${carta1.id} e ${carta2.id} (${pairId})`);
-    });
-    
-    console.log('📦 Cartas antes do embaralhamento:', cartasArray.length);
-    
-    const cartasEmbaralhadas = [...cartasArray];
-    for (let i = cartasEmbaralhadas.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [cartasEmbaralhadas[i], cartasEmbaralhadas[j]] = [cartasEmbaralhadas[j], cartasEmbaralhadas[i]];
-    }
-    
-    console.log('🎲 Cartas embaralhadas com sucesso!');
-    
-    debugPares(cartasEmbaralhadas);
-    
-    return cartasEmbaralhadas;
-  }
 
+function criarCartasFallback(): Cartas[] {
+  console.log('🏗️ Criando cartas fallback...');
+  
+  const imagensUnicas = imagensDisponiveis.slice(0, 9); // ✅ 8 imagens únicas para 8 pares = 16 cartas
+  console.log('🖼️ Imagens selecionadas:', imagensUnicas);
+  
+  const cartasArray: Cartas[] = [];
+  
+  imagensUnicas.forEach((imagem, index) => {
+    const pairId = `pair-${index}`;
+    
+    console.log(`🎴 Criando par ${index + 1}: ${imagem}`);
+    
+    const carta1 = new Cartas(
+      `carta-${index}-a`,
+      imagem,
+      pairId,
+      'hidden'
+    );
+    
+    const carta2 = new Cartas(
+      `carta-${index}-b`,
+      imagem,
+      pairId,
+      'hidden'
+    );
+    
+    cartasArray.push(carta1, carta2);
+    
+    console.log(`  ✅ Criadas: ${carta1.id} e ${carta2.id} (${pairId})`);
+  });
+  
+  console.log('📦 Cartas antes do embaralhamento:', cartasArray.length);
+  
+  const cartasEmbaralhadas = [...cartasArray];
+  for (let i = cartasEmbaralhadas.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cartasEmbaralhadas[i], cartasEmbaralhadas[j]] = [cartasEmbaralhadas[j], cartasEmbaralhadas[i]];
+  }
+  
+  console.log('🎲 Cartas embaralhadas com sucesso!');
+  console.log(`📊 Total de cartas criadas: ${cartasEmbaralhadas.length}`);
+  
+  debugPares(cartasEmbaralhadas);
+  
+  return cartasEmbaralhadas;
+}
   // ✅ FUNÇÃO PARA SALVAR NO RANKING
   function salvarNoRanking(tempoEsgotadoParam: boolean = false) {
     if (!jogador) {
@@ -742,7 +746,7 @@
   precisao={tentativas > 0 ? Math.round((acertos * 2 / tentativas) * 100) : 0}
   {nivel}
   {tempoEsgotado}
-  totalPares={6}
+  totalPares={8}
   isAdventure={true}
   on:playAgain={handlePlayAgain}
   on:goHome={handleGoHome}
@@ -765,7 +769,7 @@
       on:toggleAudio={toggleMute}
     />
 
-    <div class="fixed bottom-50">
+    <div class="fixed bottom-30">
       <GameBus cartasClasse={cartas} {virarCarta} />
     </div>
   </div>

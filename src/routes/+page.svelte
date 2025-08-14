@@ -1,3 +1,7 @@
+<svelte:head>
+  <title>MemoGame: BotaFire</title>
+</svelte:head>
+
 <script lang="ts">
   import '../app.css';
   import { onMount } from 'svelte';
@@ -12,12 +16,14 @@
   // });
 </script>
 
+
+
+
 <main class="w-full min-h-screen bg-[url('/images/MemoBg2.png')] md:bg-[url('/images/MemoBg2.png')] bg-cover md:bg-contain bg-no-repeat bg-center">
   <!-- Container principal -->
   <div class="min-h-screen flex flex-col justify-center items-center relative">
     
-    <!-- Em mobile: botões centralizados normalmente -->
-    <!-- Em desktop: botões posicionados sobre a tela do Game Boy -->
+   
     <div class="flex flex-col gap-4 md:gap-3 items-center 
                 md:absolute md:top-1/2 md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-4
                 lg:-translate-y-12 xl:-translate-y-16">
