@@ -222,7 +222,7 @@
   import { page } from '$app/stores';
   import { get } from 'svelte/store';
   import { Jogador } from "$lib/classes/jogador";
-  import { LogOut, Pause, Play, Clock } from 'lucide-svelte';
+  import { LogOut, Pause, Play, Clock, Volume2, VolumeOff } from 'lucide-svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -235,6 +235,7 @@
   export let instructions: string = "Need help?"
   export let jogoPausado: boolean = false;
   export let tempoRestante: string = '01:00'; // ✅ Padrão 60 segundos
+  export let isMuted: boolean = false;
 
   // ✅ Função para verificar se o tempo está ficando crítico
   function isTempoUrgente(tempoStr: string): boolean {
@@ -257,9 +258,29 @@
   function handleAjudaClick() {
     dispatch("reabrirModal");
   }
+
+   function handleToggleAudio() {
+    dispatch('toggleAudio');
+  }
 </script>
 
 <div class="flex w-full gap-3 sm:gap-5 md:gap-8 px-4 py-4 justify-center font-bold text-black flex-wrap">
+
+  <!-- ✅ BOTÃO DE ÁUDIO -->
+      <button
+        class="bg-gray-200 px-3 sm:px-5 py-2 text-sm shadow-lg flex justify-center items-center rounded-2xl"
+        class:border-red-500={isMuted}
+        class:border-green-500={!isMuted}
+        on:click={handleToggleAudio}
+        title={isMuted ? 'Ativar áudio' : 'Desativar áudio'}
+      >
+        {#if isMuted}
+          <VolumeOff />
+          
+        {:else}
+          <Volume2 />
+        {/if}
+      </button>
 
   <!-- Botão Pause ou Play -->
   <button
@@ -306,6 +327,8 @@
     </div>
   {/if}
 
+  
+
   <!-- Botão de Ajuda -->
   <button 
     class="bg-gray-200 px-3 sm:px-5 text-sm shadow-lg flex justify-center items-center rounded-2xl hover:cursor-pointer hover:bg-gray-300 transition-colors"
@@ -316,7 +339,7 @@
 
   <!-- Botão Sair -->
   <button
-    class="bg-color4 text-white px-4 py-2 rounded-2xl shadow-lg cursor-pointer hover:bg-opacity-90 transition-all"
+    class="bg-red-400 text-white px-4 py-2 rounded-2xl shadow-lg cursor-pointer hover:bg-opacity-90 transition-all"
     on:click={handleExit}
     aria-label="Exit game"
   >

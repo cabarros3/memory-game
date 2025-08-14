@@ -48,6 +48,11 @@
   let isFromHelpButton: boolean = false;
 
 
+  // 🎵 ESTADO DO ÁUDIO (adicionar após as outras variáveis)
+  let backgroundMusic: HTMLAudioElement | null = null;
+  let isMuted: boolean = false;
+  let audioInitialized: boolean = false;
+
   // ✅ CORRIGIDO: Todas as imagens na mesma pasta
   const imagensDisponiveis: string[] = [
     '/images/img1.jpg',
@@ -82,83 +87,137 @@ const temporizador = criarTemporizador(
 );
 
 
-function handlePlayAgain() {
-  console.log('🔄 Jogador quer jogar novamente');
-  showVictoryModal = false;
-  
-  // ✅ RESET DAS VARIÁVEIS DE TEMPO
-  tempoEsgotado = false;
-  
-  // ✅ RESET DO JOGO
-  inicializarJogo();
+// 🎵 FUNÇÕES DE ÁUDIO (adicionar junto com as outras funções)
+function initAudio() {
+  if (audioInitialized) return;
   
   try {
-    if (tabuleiro) {
-      // ✅ resetarJogo não retorna valor, então não verificamos
-      resetarJogo(tabuleiro, jogador, imagensDisponiveis);
-      cartas = tabuleiro.cartas;
-      
-      // ✅ RESET E INICIAR TIMER
-      temporizador.resetar(); // Isso já define tempoRestante automaticamente via callback
-      temporizador.iniciar();
-      
-      console.log('✅ Jogo resetado com tabuleiro existente');
-      console.log('📊 Novas cartas:', cartas.length);
-      
-    } else {
-      // Recrear tabuleiro se necessário
-      tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
-      cartas = tabuleiro.cartas;
-      
-      // ✅ RESET E INICIAR TIMER
-      temporizador.resetar(); // Isso já define tempoRestante automaticamente via callback
-      temporizador.iniciar();
-      
-      console.log('✅ Novo tabuleiro criado');
-      console.log('📊 Novas cartas:', cartas.length);
-    }
+    backgroundMusic = new Audio('/audio/game_music.mp3');
+    backgroundMusic.loop = true;
+    backgroundMusic.volume = 0.15; // Volume baixo para não incomodar
     
-    // ✅ DEBUG DO ESTADO APÓS RESET
-    console.log('🔄 Estado após reset:');
-    console.log(`  - Acertos: ${acertos}`);
-    console.log(`  - Tentativas: ${tentativas}`);
-    console.log(`  - Tempo restante: ${tempoRestante}`);
-    console.log(`  - Jogo finalizado: ${jogoFinalizado}`);
-    console.log(`  - Tempo esgotado: ${tempoEsgotado}`);
+    // Eventos para debug
+    backgroundMusic.addEventListener('loadstart', () => console.log('🎵 Carregando áudio...'));
+    backgroundMusic.addEventListener('canplay', () => console.log('🎵 Áudio pronto para tocar'));
+    backgroundMusic.addEventListener('error', (e) => console.error('❌ Erro no áudio:', e));
     
+    audioInitialized = true;
+    console.log('🎵 Áudio inicializado com sucesso');
   } catch (error) {
-    console.error('❌ Erro ao resetar jogo:', error);
-    
-    // ✅ FALLBACK: criar novo tabuleiro
-    try {
-      tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
-      cartas = tabuleiro.cartas;
-      
-      temporizador.resetar();
-      temporizador.iniciar();
-      
-      console.log('🆘 Tabuleiro recriado após erro');
-      
-    } catch (fallbackError) {
-      console.error('❌ Erro crítico no fallback:', fallbackError);
-      
-      // ✅ USAR CARTAS DE EMERGÊNCIA
-      cartas = criarCartasFallback();
-      
-      temporizador.resetar();
-      temporizador.iniciar();
-      
-      console.log('🚨 Usando cartas de emergência');
+    console.error('❌ Erro ao inicializar áudio:', error);
+  }
+}
+
+function startMusic() {
+  if (!backgroundMusic) initAudio();
+  
+  if (!isMuted && backgroundMusic && audioInitialized) {
+    backgroundMusic.play().catch(e => {
+      console.log('🎵 Autoplay bloqueado - usuário precisa interagir primeiro');
+    });
+    console.log('🎵 Música iniciada');
+  }
+}
+
+function stopMusic() {
+  if (backgroundMusic) {
+    backgroundMusic.pause();
+    backgroundMusic.currentTime = 0;
+    console.log('🎵 Música parada');
+  }
+}
+
+function toggleMute() {
+  isMuted = !isMuted;
+  console.log(`🎵 Audio ${isMuted ? 'mutado' : 'desmutado'}`);
+  
+  if (backgroundMusic) {
+    if (isMuted) {
+      backgroundMusic.pause();
+    } else if (!tempoEsgotado && !jogoFinalizado) {
+      // Só retoma a música se o jogo ainda estiver ativo
+      backgroundMusic.play().catch(e => console.log('❌ Erro ao retomar áudio:', e));
     }
   }
-  
-  // ✅ FORÇA ATUALIZAÇÃO DAS VARIÁVEIS REATIVAS
-  setTimeout(() => {
-    acertos = jogador.acertos;
-    tentativas = jogador.tentativas;
-    console.log('🔄 Variáveis reativas atualizadas:', { acertos, tentativas });
-  }, 100);
 }
+
+// function handlePlayAgain() {
+//   console.log('🔄 Jogador quer jogar novamente');
+//   showVictoryModal = false;
+  
+//   // ✅ RESET DAS VARIÁVEIS DE TEMPO
+//   tempoEsgotado = false;
+  
+//   // ✅ RESET DO JOGO
+//   inicializarJogo();
+  
+//   try {
+//     if (tabuleiro) {
+//       // ✅ resetarJogo não retorna valor, então não verificamos
+//       resetarJogo(tabuleiro, jogador, imagensDisponiveis);
+//       cartas = tabuleiro.cartas;
+      
+//       // ✅ RESET E INICIAR TIMER
+//       temporizador.resetar(); // Isso já define tempoRestante automaticamente via callback
+//       temporizador.iniciar();
+      
+//       console.log('✅ Jogo resetado com tabuleiro existente');
+//       console.log('📊 Novas cartas:', cartas.length);
+      
+//     } else {
+//       // Recrear tabuleiro se necessário
+//       tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
+//       cartas = tabuleiro.cartas;
+      
+//       // ✅ RESET E INICIAR TIMER
+//       temporizador.resetar(); // Isso já define tempoRestante automaticamente via callback
+//       temporizador.iniciar();
+      
+//       console.log('✅ Novo tabuleiro criado');
+//       console.log('📊 Novas cartas:', cartas.length);
+//     }
+    
+//     // ✅ DEBUG DO ESTADO APÓS RESET
+//     console.log('🔄 Estado após reset:');
+//     console.log(`  - Acertos: ${acertos}`);
+//     console.log(`  - Tentativas: ${tentativas}`);
+//     console.log(`  - Tempo restante: ${tempoRestante}`);
+//     console.log(`  - Jogo finalizado: ${jogoFinalizado}`);
+//     console.log(`  - Tempo esgotado: ${tempoEsgotado}`);
+    
+//   } catch (error) {
+//     console.error('❌ Erro ao resetar jogo:', error);
+    
+//     // ✅ FALLBACK: criar novo tabuleiro
+//     try {
+//       tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
+//       cartas = tabuleiro.cartas;
+      
+//       temporizador.resetar();
+//       temporizador.iniciar();
+      
+//       console.log('🆘 Tabuleiro recriado após erro');
+      
+//     } catch (fallbackError) {
+//       console.error('❌ Erro crítico no fallback:', fallbackError);
+      
+//       // ✅ USAR CARTAS DE EMERGÊNCIA
+//       cartas = criarCartasFallback();
+      
+//       temporizador.resetar();
+//       temporizador.iniciar();
+      
+//       console.log('🚨 Usando cartas de emergência');
+//     }
+//   }
+  
+//   // ✅ FORÇA ATUALIZAÇÃO DAS VARIÁVEIS REATIVAS
+//   setTimeout(() => {
+//     acertos = jogador.acertos;
+//     tentativas = jogador.tentativas;
+//     console.log('🔄 Variáveis reativas atualizadas:', { acertos, tentativas });
+//   }, 100);
+// }
 
 // function handleTimeUp() {
 //   if (jogoFinalizado || tempoEsgotado) return;
@@ -183,23 +242,130 @@ function handlePlayAgain() {
 // }
 
   // ✅ FUNÇÃO CORRIGIDA PARA INICIALIZAR ACERTOS
-function handleTimeUp() {
+function handlePlayAgain() {
+  console.log('🔄 Jogador quer jogar novamente');
+  showVictoryModal = false;
+  
+  // ✅ RESET DAS VARIÁVEIS DE TEMPO
+  tempoEsgotado = false;
+  
+  // ✅ RESET DO JOGO
+  inicializarJogo();
+  
+  try {
+    if (tabuleiro) {
+      resetarJogo(tabuleiro, jogador, imagensDisponiveis);
+      cartas = tabuleiro.cartas;
+      
+      temporizador.resetar();
+      temporizador.iniciar();
+      
+      // ✅ REINICIAR MÚSICA
+      if (!isMuted) {
+        startMusic();
+      }
+      
+      console.log('✅ Jogo resetado com tabuleiro existente');
+      console.log('📊 Novas cartas:', cartas.length);
+      
+    } else {
+      tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
+      cartas = tabuleiro.cartas;
+      
+      temporizador.resetar();
+      temporizador.iniciar();
+      
+      // ✅ REINICIAR MÚSICA
+      if (!isMuted) {
+        startMusic();
+      }
+      
+      console.log('✅ Novo tabuleiro criado');
+      console.log('📊 Novas cartas:', cartas.length);
+    }
+    
+    console.log('🔄 Estado após reset:');
+    console.log(`  - Acertos: ${acertos}`);
+    console.log(`  - Tentativas: ${tentativas}`);
+    console.log(`  - Tempo restante: ${tempoRestante}`);
+    console.log(`  - Jogo finalizado: ${jogoFinalizado}`);
+    console.log(`  - Tempo esgotado: ${tempoEsgotado}`);
+    console.log(`  - Áudio mutado: ${isMuted}`);
+    
+  } catch (error) {
+    console.error('❌ Erro ao resetar jogo:', error);
+    
+    try {
+      tabuleiro = criarTabuleiro('tabuleiro-1', 'adventure', imagensDisponiveis);
+      cartas = tabuleiro.cartas;
+      
+      temporizador.resetar();
+      temporizador.iniciar();
+      
+      if (!isMuted) {
+        startMusic();
+      }
+      
+      console.log('🆘 Tabuleiro recriado após erro');
+      
+    } catch (fallbackError) {
+      console.error('❌ Erro crítico no fallback:', fallbackError);
+      
+      cartas = criarCartasFallback();
+      
+      temporizador.resetar();
+      temporizador.iniciar();
+      
+      if (!isMuted) {
+        startMusic();
+      }
+      
+      console.log('🚨 Usando cartas de emergência');
+    }
+  }
+  
+  setTimeout(() => {
+    acertos = jogador.acertos;
+    tentativas = jogador.tentativas;
+    console.log('🔄 Variáveis reativas atualizadas:', { acertos, tentativas });
+  }, 100);
+}
+
+//   function handleTimeUp() {
+//   if (jogoFinalizado || tempoEsgotado) return;
+  
+//   tempoEsgotado = true;
+//   jogoFinalizado = true;
+//   temporizador.pausar();
+  
+//   console.log('⏰ Tempo esgotado!');
+//   console.log(`📊 Estado final: ${acertos}/${cartas.length / 2} pares encontrados`);
+//   console.log(`🎯 Tentativas: ${tentativas}`);
+  
+//   // ✅ ABRE O MODAL DE FIM DE JOGO (mesmo modal da vitória)
+//   setTimeout(() => {
+//     showVictoryModal = true;
+//   }, 300);
+// }
+  
+  function handleTimeUp() {
   if (jogoFinalizado || tempoEsgotado) return;
   
   tempoEsgotado = true;
   jogoFinalizado = true;
   temporizador.pausar();
   
+  // ✅ PARAR MÚSICA QUANDO TEMPO ESGOTAR
+  stopMusic();
+  
   console.log('⏰ Tempo esgotado!');
   console.log(`📊 Estado final: ${acertos}/${cartas.length / 2} pares encontrados`);
   console.log(`🎯 Tentativas: ${tentativas}`);
   
-  // ✅ ABRE O MODAL DE FIM DE JOGO (mesmo modal da vitória)
   setTimeout(() => {
     showVictoryModal = true;
   }, 300);
 }
-  
 
 function inicializarJogo() {
     jogador = new Jogador('Jogador');
@@ -215,13 +381,24 @@ function inicializarJogo() {
     isFromHelpButton = true;
   }
 
-  function closeModal() {
-    showIntroModal = false;
-    isFromHelpButton = false;
-    temporizador.iniciar()
-  }
+  // function closeModal() {
+  //   showIntroModal = false;
+  //   isFromHelpButton = false;
+  //   temporizador.iniciar()
+  // }
 
   // 🔍 FUNÇÃO DE DEBUG PARA VERIFICAR PARES
+  function closeModal() {
+  showIntroModal = false;
+  isFromHelpButton = false;
+  temporizador.iniciar();
+  
+  // ✅ INICIAR MÚSICA QUANDO O JOGO COMEÇAR
+  startMusic();
+}
+
+  
+  
   function debugPares(cartas: Cartas[]) {
     console.log('\n🔍 === DEBUG DOS PARES ===');
     console.log('📊 Total de cartas:', cartas.length);
@@ -362,6 +539,29 @@ function inicializarJogo() {
 //     }, 300);
 //   }
 
+// function fimDeJogo() {
+//   if (jogoFinalizado) {
+//     console.log('⚠️ Fim de jogo já foi executado, ignorando...');
+//     return;
+//   }
+  
+//   jogoFinalizado = true;
+//   temporizador.pausar();
+
+//   console.log('🏆 Fim de jogo!');
+  
+//   // ✅ DEBUG DETALHADO DO ESTADO FINAL
+//   const cartasMatched = cartas.filter(c => c.status === 'matched').length;
+//   console.log(`📊 Estado final: ${cartasMatched}/${cartas.length} cartas matched`);
+//   console.log(`🎯 Acertos do jogador: ${jogador.acertos}`);
+//   console.log(`📊 Tentativas: ${jogador.tentativas}`);
+
+//   // ✅ DELAY PARA GARANTIR QUE TUDO FOI PROCESSADO E ABRE O MODAL
+//   setTimeout(() => {
+//     showVictoryModal = true;
+//   }, 300);
+// }
+
 function fimDeJogo() {
   if (jogoFinalizado) {
     console.log('⚠️ Fim de jogo já foi executado, ignorando...');
@@ -370,16 +570,17 @@ function fimDeJogo() {
   
   jogoFinalizado = true;
   temporizador.pausar();
+  
+  // ✅ PARAR MÚSICA NO FIM DO JOGO
+  stopMusic();
 
   console.log('🏆 Fim de jogo!');
   
-  // ✅ DEBUG DETALHADO DO ESTADO FINAL
   const cartasMatched = cartas.filter(c => c.status === 'matched').length;
   console.log(`📊 Estado final: ${cartasMatched}/${cartas.length} cartas matched`);
   console.log(`🎯 Acertos do jogador: ${jogador.acertos}`);
   console.log(`📊 Tentativas: ${jogador.tentativas}`);
 
-  // ✅ DELAY PARA GARANTIR QUE TUDO FOI PROCESSADO E ABRE O MODAL
   setTimeout(() => {
     showVictoryModal = true;
   }, 300);
@@ -668,23 +869,41 @@ function virarCarta(index: number) {
   console.log('=== FIM VIRAR CARTA ===\n');
 }
 
-  function handlePause() {
-    if (jogoPausado) {
-      temporizador.iniciar();
-    } else {
-      temporizador.pausar();
-    }
-    jogoPausado = !jogoPausado;
-  }
+  // function handlePause() {
+  //   if (jogoPausado) {
+  //     temporizador.iniciar();
+  //   } else {
+  //     temporizador.pausar();
+  //   }
+  //   jogoPausado = !jogoPausado;
+  // }
 
-  function handleExit() {
+function handlePause() {
+  if (jogoPausado) {
+    temporizador.iniciar();
+    // ✅ RETOMAR MÚSICA SE NÃO ESTIVER MUTADA
+    if (!isMuted && backgroundMusic) {
+      backgroundMusic.play().catch(e => console.log('Erro ao retomar música:', e));
+    }
+  } else {
     temporizador.pausar();
-    if (pathname.includes('/adventure')) {
-      goto('/');
-    } else {
-      goto('/levels');
+    // ✅ PAUSAR MÚSICA
+    if (backgroundMusic) {
+      backgroundMusic.pause();
     }
   }
+  jogoPausado = !jogoPausado;
+}
+
+
+  // function handleExit() {
+  //   temporizador.pausar();
+  //   if (pathname.includes('/adventure')) {
+  //     goto('/');
+  //   } else {
+  //     goto('/levels');
+  //   }
+  // }
 
 
 //   onMount(async () => {
@@ -734,6 +953,19 @@ function virarCarta(index: number) {
 //     console.log('🆘 Usando cartas de emergência:', cartas.length);
 //   }
 // });
+
+function handleExit() {
+  temporizador.pausar();
+  
+  // ✅ PARAR MÚSICA AO SAIR
+  stopMusic();
+  
+  if (pathname.includes('/adventure')) {
+    goto('/');
+  } else {
+    goto('/levels');
+  }
+}
 
 
 onMount(async () => {
@@ -790,8 +1022,15 @@ onMount(async () => {
 });
 
   onDestroy(() => {
-    temporizador.pausar();
-  });
+  temporizador.pausar();
+  
+  // ✅ LIMPAR ÁUDIO
+  stopMusic();
+  if (backgroundMusic) {
+    backgroundMusic = null;
+  }
+  audioInitialized = false;
+});
 
   // ✅ DEBUG REATIVO COM MONITORAMENTO DE FIM DE JOGO
   $: {
@@ -886,9 +1125,11 @@ onMount(async () => {
     {tentativas}
     {acertos}
     {jogoPausado}
+    {isMuted}
     on:reabrirModal={openFromHelpButton}
     on:pause={handlePause}
     on:exit={handleExit}
+    on:toggleAudio={toggleMute}
   />
 
   {#if cartas && cartas.length > 0}

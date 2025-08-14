@@ -12,7 +12,7 @@
   // });
 </script>
 
-<main class="w-full min-h-screen bg-[url('/vectors/1908.png')] md:bg-[url('/images/MemoBg.png')] bg-cover md:bg-contain bg-no-repeat bg-center">
+<main class="w-full min-h-screen bg-[url('/images/MemoBg2.png')] md:bg-[url('/images/MemoBg2.png')] bg-cover md:bg-contain bg-no-repeat bg-center">
   <!-- Container principal -->
   <div class="min-h-screen flex flex-col justify-center items-center relative">
     
