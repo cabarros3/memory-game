@@ -1,124 +1,64 @@
-# 🚌 MemoryGame: Botafogo
+# Memogame: BotaFire 🔥
 
-## 📌 1. Visão Geral
+Bem-vindo ao **Memogame: BotaFire**, um clássico jogo da memória com uma alma e uma história genuinamente local. Este não é apenas um jogo, é uma homenagem a uma aventura diária compartilhada por muitos estudantes.
 
-Este projeto é um **jogo da memória temático** inspirado no famoso ônibus 1908 da comunidade rural de Botafogo (Igarassu - PE). A proposta é oferecer uma experiência divertida e acessível via navegador, com visual adaptado ao contexto local.
+## A Origem do BotaFire 🚌💨
 
-- **Nome provisório**: MemoGame: Botafogo
-- **Objetivo**: Criar um jogo da memória simples, temático e responsivo
-- **Plataforma**: Web (desktop e mobile)
-- **Público-alvo**: Comunidade acadêmica do IPFE Igarassu
+Tudo começou com um projeto acadêmico para a disciplina do Professor Allan, no curso de TSI do IFPE Igarassu. A missão era desenvolver um jogo, mas queríamos mais do que apenas código e pixels; buscávamos uma alma, uma história que fosse nossa.
 
----
+A inspiração não veio de mundos de fantasia, mas do asfalto que percorremos todos os dias. Veio do som do motor, do balanço nas curvas e da experiência que nos une: a jornada a bordo do lendário ônibus **Botafogo - Igarassu, linha 1908**.
 
-## ✅ 2. Requisitos Funcionais
+Para quem estuda no campus, essa nunca foi apenas uma viagem. É o protagonista de uma aventura diária, uma máquina conhecida por sua velocidade impressionante e pela maestria com que vence as ladeiras do Alto do Céu. É a adrenalina antes da prova, as conversas no fundo do ônibus e a certeza de que, de alguma forma, chegaríamos a tempo.
 
-| Código | Descrição                                                  |
-| ------ | ---------------------------------------------------------- |
-| RF01   | Exibir tela inicial com botão "Jogar"                      |
-| RF02   | Mostrar tabuleiro com cartas viradas para baixo            |
-| RF03   | Permitir virar duas cartas por jogada                      |
-| RF04   | Manter cartas iguais viradas; esconder se forem diferentes |
-| RF05   | Contar tempo da partida e número de tentativas             |
-| RF06   | Informar quando todos os pares forem encontrados           |
-| RF07   | Oferecer botão para reiniciar o jogo                       |
-| RF08   | Permitir troca de tema (claro/escuro)                      |
-| RF09   | Exibir placar final com tempo e tentativas                 |
+Dessa intensidade, dessa "chama" que é atravessar a cidade para estudar, nasceu o nome: **BotaFire**.
+
+Este jogo é, portanto, nosso folclore em forma digital. Uma homenagem a cada estudante que já se segurou firme no banco, sorrindo com um misto de medo e admiração. É a nossa história transformada em um desafio de memória.
 
 ---
 
-## 🚫 3. Requisitos Não Funcionais
+## 🚀 Tecnologias Utilizadas
 
-| Código | Descrição                                         |
-| ------ | ------------------------------------------------- |
-| RNF01  | O jogo deve carregar em até 3 segundos            |
-| RNF02  | Interface responsiva para mobile e desktop        |
-| RNF03  | Desenvolvido com Svelte e Tailwind CSS            |
-| RNF04  | Deve ser acessível (navegação por teclado, ARIA)  |
-| RNF05  | Compatível com os principais navegadores modernos |
+Este projeto foi construído com ferramentas modernas, focando em performance e uma ótima experiência de desenvolvimento.
 
----
-
-## 🧰 4. Tecnologias Utilizadas
-
-- **Framework**: [SvelteKit](https://kit.svelte.dev)
-- **Estilização**: Tailwind CSS
-- **Controle de versão**: Git + GitHub
-- **Hospedagem**: Netlify ou Vercel _(a definir)_
-- **Ferramentas auxiliares**: Vite, ESLint, Prettier
+- **Framework Principal:** Svelte / SvelteKit
+- **Linguagem:** TypeScript
+- **Estilização:** Tailwind CSS
+- **Build Tool:** Vite
+- **Ícones:** Lucide Icons
+- **Qualidade de Código:** ESLint e Prettier
 
 ---
 
-## 🧭 5. Interface e Navegação
+## ⚙️ Como Executar o Projeto
 
-### Tela Inicial
+Para rodar este projeto localmente, siga os passos abaixo. Você precisará ter o [Node.js](https://nodejs.org/) instalado.
 
-- Nome do jogo
-- Botão "Jogar"
+1.  **Clone o repositório:**
 
-### Tela do Jogo
+    ```bash
+    git clone [https://github.com/seu-usuario/memogame-botafire.git](https://github.com/seu-usuario/memogame-botafire.git)
+    ```
 
-- Grade 4x4 com cartas
-- Temporizador
-- Contador de tentativas
-- Botão "Reiniciar"
+2.  **Acesse o diretório do projeto:**
 
-### Tela Final
+    ```bash
+    cd memogame-botafire
+    ```
 
-- Mensagem de conclusão
-- Tempo total e número de tentativas
-- Botão “Jogar novamente”
+3.  **Instale as dependências:**
 
----
+    ```bash
+    npm install
+    ```
 
-## 🎮 6. Regras do Jogo
+4.  **Inicie o servidor de desenvolvimento:**
+    ```bash
+    npm run dev
+    ```
+    Agora, abra seu navegador e acesse `http://localhost:5173` para ver o jogo em ação!
 
-- 16 cartas (8 pares) embaralhadas aleatoriamente
-- Jogador vira 2 cartas por vez
-- Cartas iguais permanecem visíveis
-- Cartas diferentes viram de volta após 1 segundo
-- Jogo termina ao encontrar todos os pares
-- Exibição do tempo e tentativas no final
+### Scripts Disponíveis
 
----
+Além do comando `dev`, você pode usar outros scripts úteis:
 
-## 🎯 7. Critérios de Aceitação
-
-- [x] Todas as funcionalidades estão implementadas
-- [x] Design responsivo para diferentes tamanhos de tela
-- [x] Acessibilidade por teclado e leitores de tela
-- [x] Compatibilidade com Chrome, Firefox e Edge
-- [x] Código limpo, modular e reutilizável em Svelte
-
----
-
-## 💡 8. Funcionalidades Futuras
-
-- 🔊 Efeitos sonoros (cartas e vitória)
-- ✨ Animações personalizadas
-- 🏆 Ranking com melhores tempos
-- 👫 Modo multiplayer local ou online
-- 🎨 Customização de temas e fundos
-
----
-
-## 🛠️ 9. Como Rodar o Projeto Localmente
-
-### ⚙️ Pré-requisitos
-
-- [Node.js](https://nodejs.org/) (versão LTS recomendada)
-- [Git](https://git-scm.com/)
-
-### 📦 Passos
-
-```bash
-# 1. Clone o repositório
-git clone https://github.com/cabarros3/memory-game.git
-cd memory-game
-
-# 2. Instale as dependências
-npm install
-
-# 3. Rode o servidor de desenvolvimento
-npm run dev
-```
+- `npm run build`: Compila o projeto para produção.# Memogame: BotaFire 🔥
