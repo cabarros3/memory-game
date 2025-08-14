@@ -765,7 +765,9 @@
       on:toggleAudio={toggleMute}
     />
 
-    <GameBus cartasClasse={cartas} {virarCarta} />
+    <div class="fixed bottom-50">
+      <GameBus cartasClasse={cartas} {virarCarta} />
+    </div>
   </div>
 {:else if !mostrarModalNome && !showIntroModal}
   <!-- Loading state quando não há cartas mas jogo deveria estar rodando -->

@@ -136,9 +136,9 @@
           : 'bg-white/20 text-black hover:bg-white/30'}"
         on:click={() => filtrarRanking('todos')}
       >
-        🌟 All Time
+        🔥 All Time
       </button>
-      <button
+      <!-- <button
         class="px-6 py-3 rounded-full font-semibold transition-all {filtroAtual === 'semana' 
           ? 'bg-white text-purple-600' 
           : 'bg-white/20 text-black hover:bg-white/30'}"
@@ -152,13 +152,13 @@
           : 'bg-white/20 text-black hover:bg-white/30'}"
         on:click={() => filtrarRanking('hoje')}
       >
-        🔥 Today
-      </button>
+         Today
+      </button> -->
     </div>
 
     <!-- Ranking Principal -->
     <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
-      <div class="bg-gradient-to-r from-purple-600 to-blue-600 p-6">
+      <div class="bg-color2 p-6">
         <h2 class="text-2xl font-bold text-white text-center">
           🎯 Top {ranking.length} Players
         </h2>
@@ -172,8 +172,8 @@
       {:else if ranking.length === 0}
         <div class="p-12 text-center">
           <div class="text-6xl mb-4">🎮</div>
-          <h3 class="text-xl font-semibold text-gray-600 mb-2">Nenhuma pontuação ainda!</h3>
-          <p class="text-gray-500 mb-6">Seja o primeiro a aparecer no ranking!</p>
+          <h3 class="text-xl font-semibold text-gray-600 mb-2">No scores yet!</h3>
+          <p class="text-gray-500 mb-6">Be the first to appear in the ranking!</p>
           <button
             class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition-all"
             on:click={jogarNovamente}
@@ -204,23 +204,23 @@
                 <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
                   <div>
                     <div class="text-xl font-bold text-green-600">{entrada.pontuacaoFinal}</div>
-                    <div class="text-xs text-gray-500">Pontos</div>
+                    <div class="text-xs text-gray-500">Score</div>
                   </div>
                   <div>
                     <div class="text-lg font-semibold text-blue-600">{entrada.acertos}</div>
-                    <div class="text-xs text-gray-500">Acertos</div>
+                    <div class="text-xs text-gray-500">Matches</div>
                   </div>
                   <div>
                     <div class="text-lg font-semibold text-purple-600">{entrada.precisao}%</div>
-                    <div class="text-xs text-gray-500">Precisão</div>
+                    <div class="text-xs text-gray-500">Accuracy</div>
                   </div>
                   <div>
                     <div class="text-lg font-semibold text-orange-600">{RankingManager.formatarTempo(entrada.tempoDecorrido)}</div>
-                    <div class="text-xs text-gray-500">Tempo</div>
+                    <div class="text-xs text-gray-500">Time</div>
                   </div>
                   <div class="hidden md:block">
                     <div class="text-lg font-semibold text-red-600">{entrada.tentativas}</div>
-                    <div class="text-xs text-gray-500">Tentativas</div>
+                    <div class="text-xs text-gray-500">attempts</div>
                   </div>
                 </div>
               </div>
@@ -248,19 +248,19 @@
         class="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-full font-semibold hover:shadow-lg transition-all flex items-center gap-2"
         on:click={jogarNovamente}
       >
-        🎮 Jogar Novamente
+        🎮 Play Again
       </button>
       <button
         class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-4 rounded-full font-semibold hover:shadow-lg transition-all flex items-center gap-2"
         on:click={voltarInicio}
       >
-        🏠 Menu Principal
+        🏠 Menu
       </button>
       <button
         class="bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-4 rounded-full font-semibold hover:shadow-lg transition-all flex items-center gap-2"
         on:click={limparRanking}
       >
-        🗑️ Limpar Ranking
+        🗑️ Clear Ranking
       </button>
     </div>
 

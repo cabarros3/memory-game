@@ -11,7 +11,7 @@
     lg: "w-40 text-xl"
   };
 
-  const baseClasses = "py-1 font-bold rounded-2xl shadow-md transition-all duration-200";
+  const baseClasses = "font-bold shadow-md duration-200 px-4 py-1.5 rounded-full font-semibold hover:shadow-lg transition-all";
 </script>
 
 <button
