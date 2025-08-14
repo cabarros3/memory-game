@@ -732,7 +732,7 @@ function criarCartasFallback(): Cartas[] {
         class="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700"
         on:click={closeModalEIniciar}
       >
-        I'm ready!
+        I'm ready for it...!
       </button>
     {/if}
   </div>
