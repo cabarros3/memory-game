@@ -29,9 +29,15 @@
         onClick={() => goto("/adventure")} 
       />
       <Botao 
+        text="Ranking" 
+        size="sm" 
+        className="bg-color3 hover:bg-color2 cursor-pointer w-32 md:w-24 lg:w-30" 
+        onClick={() => goto("/ranking")} 
+      />
+      <Botao 
         text="About" 
         size="sm" 
-        className="bg-color3 hover:bg-color2 cursor-pointer w-32 md:w-36 lg:w-40" 
+        className="bg-color1 hover:bg-color2 cursor-pointer w-32 md:w-36 lg:w-24" 
         onClick={() => goto("/about")} 
       />
     </div>
