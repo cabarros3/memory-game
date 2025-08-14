@@ -7,9 +7,10 @@
 @theme {
 	/* Cores customizadas */
 	--color-color1: #ffc905;
-	--color-color2: #ff6600;
+	--color-color2: #c76e00;
 	--color-color3: #0cd591;
 	--color-color4: #0000fe;
+	--color-color5: #ff5c00;
 }
 
 .body {

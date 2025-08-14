@@ -36,7 +36,7 @@
       id: 4, 
       name: "Mariana Meireles", 
       role: "Game Developer",
-      img: "/vectors/Onibus.jpg",
+      img: "/profile_photos/anonimo.jpeg",
       linkedin: "/about",
       github: "/about"
     },
@@ -44,7 +44,7 @@
       id: 5, 
       name: "Jadson", 
       role: "Full Stack Developer",
-      img: "/vectors/Onibus.jpg",
+      img: "/profile_photos/anonimo.jpeg",
       linkedin: "/about",
       github: "/about"
     },

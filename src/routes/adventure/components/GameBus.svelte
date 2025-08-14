@@ -14,7 +14,7 @@
 <!-- bg-[url('/images/img2.png')] bg-contain -->
 
 <!-- Container do ônibus - Aumentado significativamente -->
-<div class="relative mt-20 max-w-[1200px] rounded-2xl bg-white px-12 py-12 shadow-2xl">
+<div class="relative mt-20 max-w-[1200px] rounded-2xl bg-color5 px-12 py-12 shadow-2xl">
   <!-- Grid principal com mais espaço -->
   <div class="grid grid-cols-[auto_120px_auto_120px_auto_120px] gap-x-8 items-start">
     {#if cartas && cartas.length >= 12}
