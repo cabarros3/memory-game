@@ -107,7 +107,7 @@
     if (audioInitialized) return;
     
     try {
-      backgroundMusic = new Audio('/audio/game_music.mp3');
+      backgroundMusic = new Audio('/audio/game_music.mpeg');
       backgroundMusic.loop = true;
       backgroundMusic.volume = 0.15;
       

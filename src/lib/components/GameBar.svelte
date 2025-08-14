@@ -350,25 +350,5 @@
 
 <style>
   /* ✅ Animação personalizada para tempo crítico */
-  @keyframes pulse {
-    0%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.8;
-      transform: scale(1.02);
-    }
-  }
 
-  .animate-pulse {
-    animation: pulse 1.5s ease-in-out infinite;
-  }
-
-  /* ✅ Responsividade melhorada */
-  @media (max-width: 640px) {
-    .flex {
-      gap: 0.5rem;
-    }
-  }
 </style>

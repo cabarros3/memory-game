@@ -43,7 +43,7 @@
   }
 
   function usarAnonimo() {
-    dispatch('nomeDefinido', { nome: 'Jogador Anônimo' });
+    dispatch('nomeDefinido', { nome: 'Anonymous player' });
     mostrar = false;
   }
 
