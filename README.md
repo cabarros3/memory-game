@@ -6,9 +6,6 @@ Bem-vindo ao **MemoGame: BotaFire**, um clássico jogo da memória com uma alma 
 
 ## A Origem do BotaFire 🚌💨
 
-![Tela do jogo](https://github.com/cabarros3/memory-game/blob/main/static/images/Onibus.jpg)
-
-
 Tudo começou com um projeto acadêmico para a disciplina do Professor Allan, no curso de TSI do IFPE Igarassu. A missão era desenvolver um jogo, mas queríamos mais do que apenas código e pixels; buscávamos uma alma, uma história que fosse nossa.
 
 A inspiração não veio de mundos de fantasia, mas do asfalto que percorremos todos os dias. Veio do som do motor, do balanço nas curvas e da experiência que nos une: a jornada a bordo do lendário ônibus **Botafogo - Igarassu, linha 1908**.
