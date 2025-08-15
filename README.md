@@ -6,6 +6,9 @@ Bem-vindo ao **MemoGame: BotaFire**, um clássico jogo da memória com uma alma 
 
 ## A Origem do BotaFire 🚌💨
 
+![Tela do jogo](https://github.com/cabarros3/memory-game/blob/main/static/images/Onibus.jpg)
+
+
 Tudo começou com um projeto acadêmico para a disciplina do Professor Allan, no curso de TSI do IFPE Igarassu. A missão era desenvolver um jogo, mas queríamos mais do que apenas código e pixels; buscávamos uma alma, uma história que fosse nossa.
 
 A inspiração não veio de mundos de fantasia, mas do asfalto que percorremos todos os dias. Veio do som do motor, do balanço nas curvas e da experiência que nos une: a jornada a bordo do lendário ônibus **Botafogo - Igarassu, linha 1908**.
@@ -38,7 +41,7 @@ Para rodar este projeto localmente, siga os passos abaixo. Você precisará ter 
 1.  **Clone o repositório:**
 
     ```bash
-    git clone [https://github.com/seu-usuario/memogame-botafire.git](https://github.com/cabarros3/memory-game.git)](https://github.com/cabarros3/memory-game.git)
+    git clone https://github.com/seu-usuario/memogame-botafire.git
     ```
 
 2.  **Acesse o diretório do projeto:**
