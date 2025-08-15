@@ -1,6 +1,6 @@
-# Memogame: BotaFire 🔥
+# MemoGame: BotaFire 🔥
 
-Bem-vindo ao **Memogame: BotaFire**, um clássico jogo da memória com uma alma e uma história genuinamente local. Este não é apenas um jogo, é uma homenagem a uma aventura diária compartilhada por muitos estudantes.
+Bem-vindo ao **MemoGame: BotaFire**, um clássico jogo da memória com uma alma e uma história genuinamente local. Este não é apenas um jogo, é uma homenagem a uma aventura diária compartilhada por muitos estudantes.
 
 ## A Origem do BotaFire 🚌💨
 
@@ -36,7 +36,7 @@ Para rodar este projeto localmente, siga os passos abaixo. Você precisará ter 
 1.  **Clone o repositório:**
 
     ```bash
-    git clone [https://github.com/seu-usuario/memogame-botafire.git](https://github.com/seu-usuario/memogame-botafire.git)
+    git clone [https://github.com/seu-usuario/memogame-botafire.git](https://github.com/cabarros3/memory-game.git)](https://github.com/cabarros3/memory-game.git)
     ```
 
 2.  **Acesse o diretório do projeto:**
@@ -61,4 +61,4 @@ Para rodar este projeto localmente, siga os passos abaixo. Você precisará ter 
 
 Além do comando `dev`, você pode usar outros scripts úteis:
 
-- `npm run build`: Compila o projeto para produção.# Memogame: BotaFire 🔥
+- `npm run build`: Compila o projeto para produção.# MemoGame: BotaFire 🔥
