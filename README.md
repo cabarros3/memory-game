@@ -1,6 +1,6 @@
 # MemoGame: BotaFire 🔥
 
-![Tela do jogo](/vectors/tela.png)
+![Tela do jogo](https://github.com/cabarros3/memory-game/blob/main/static/vectors/tela.png)
 
 Bem-vindo ao **MemoGame: BotaFire**, um clássico jogo da memória com uma alma e uma história genuinamente local. Este não é apenas um jogo, é uma homenagem a uma aventura diária compartilhada por muitos estudantes.
 
