@@ -44,7 +44,7 @@ Para rodar este projeto localmente, siga os passos abaixo. Você precisará ter 
 2.  **Acesse o diretório do projeto:**
 
     ```bash
-    cd memogame-botafire
+    cd memory-game
     ```
 
 3.  **Instale as dependências:**
